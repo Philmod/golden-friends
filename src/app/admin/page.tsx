@@ -1,7 +1,64 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { GameProvider, useGame } from '@/context/GameContext'
+
+function PasswordPrompt({ onSuccess }: { onSuccess: () => void }) {
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(false)
+
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      })
+
+      if (res.ok) {
+        sessionStorage.setItem('adminAuth', 'true')
+        onSuccess()
+      } else {
+        setError(true)
+      }
+    } catch {
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <form onSubmit={handleSubmit} className="bg-gray-800 p-8 rounded-xl w-full max-w-sm">
+        <h1 className="text-2xl font-bold text-gold-400 mb-6 text-center">Admin Panel</h1>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Mot de passe"
+          className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-gold-400"
+          autoFocus
+        />
+        {error && (
+          <p className="text-red-500 text-sm mb-4">Mot de passe incorrect</p>
+        )}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-gold-400 text-gray-900 font-bold py-3 rounded-lg hover:bg-gold-300 disabled:opacity-50"
+        >
+          {loading ? 'Verification...' : 'Entrer'}
+        </button>
+      </form>
+    </div>
+  )
+}
 
 function AdminPanel() {
   const {
@@ -430,6 +487,27 @@ function AdminPanel() {
 }
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    const auth = sessionStorage.getItem('adminAuth')
+    setIsAuthenticated(auth === 'true')
+    setChecking(false)
+  }, [])
+
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-2xl text-gray-400">Chargement...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <PasswordPrompt onSuccess={() => setIsAuthenticated(true)} />
+  }
+
   return (
     <GameProvider>
       <AdminPanel />

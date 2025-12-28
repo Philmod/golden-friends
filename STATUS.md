@@ -98,15 +98,20 @@
 3. **Added Favicon** ✅
    - [x] Created `src/app/icon.svg` with golden "GF" logo
 
+4. **Admin Password Protection** ✅
+   - [x] Added password prompt to `/admin` page
+   - [x] Password stored in `.env.local` (default: `golden2025`)
+   - [x] Session persists via sessionStorage
+
 ### Immediate (Before Party)
 
-4. **Customize Questions**
+5. **Customize Questions**
    - [ ] Review and personalize the multiple-answer questions
    - [ ] Select better photos from WhatsApp for photo rounds
    - [ ] Create questions specific to your friend group
    - [ ] Consider adding questions about specific people (Nico, Cabiai, etc.)
 
-5. **Test Full Game Flow**
+6. **Test Full Game Flow**
    - [ ] Run through a complete game with 2+ players
    - [ ] Verify scoring works correctly with multipliers
    - [ ] Test steal mechanism
@@ -114,19 +119,19 @@
 
 ### Nice to Have (If Time Permits)
 
-6. **Fast Money Implementation**
+7. **Fast Money Implementation**
    - [ ] Build Fast Money UI (timer, 5 questions)
    - [ ] Implement player 1 / player 2 flow
    - [ ] Add duplicate answer detection
    - Current: Fast Money round exists but UI not fully implemented
 
-7. **Visual Polish**
+8. **Visual Polish**
    - [ ] Add confetti on big point wins
    - [ ] Add team celebration animations
    - [ ] Improve mobile responsiveness
    - [ ] Add loading states
 
-8. **Game Features**
+9. **Game Features**
    - [ ] Drinking rules display on TV
    - [ ] Timer for buzzer questions
    - [ ] History/undo for admin actions
