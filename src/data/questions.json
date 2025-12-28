@@ -1,0 +1,142 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple",
+      "category": "Le Groupe",
+      "question": "Qui envoie le plus de messages dans le groupe WhatsApp?",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Pauline (Poney)", "points": 40, "revealed": false },
+        { "id": 2, "text": "Heloise", "points": 25, "revealed": false },
+        { "id": 3, "text": "Yannick", "points": 15, "revealed": false },
+        { "id": 4, "text": "Annick", "points": 12, "revealed": false },
+        { "id": 5, "text": "Cabiai", "points": 8, "revealed": false }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "multiple",
+      "category": "Les Excuses",
+      "question": "Citez une excuse bidon pour justifier 30 minutes de retard",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Pas trouve de place pour me garer", "points": 35, "revealed": false },
+        { "id": 2, "text": "Mon GPS a bugge", "points": 20, "revealed": false },
+        { "id": 3, "text": "J'ai du repasser ma chemise", "points": 15, "revealed": false },
+        { "id": 4, "text": "Le chat a vomi", "points": 10, "revealed": false },
+        { "id": 5, "text": "J'etais sur que c'etait 21h", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "buzzer",
+      "category": "Photo WhatsApp",
+      "question": "En quelle annee cette photo a-t-elle ete prise?",
+      "mediaUrl": "/data/whatsapp/00000007-PHOTO-2023-09-21-18-34-20.jpg",
+      "correctAnswer": "2023"
+    },
+    {
+      "id": 4,
+      "type": "buzzer",
+      "category": "Photo WhatsApp",
+      "question": "En quelle annee cette photo a-t-elle ete prise?",
+      "mediaUrl": "/data/whatsapp/00000166-PHOTO-2024-01-01-00-09-24.jpg",
+      "correctAnswer": "2024"
+    },
+    {
+      "id": 5,
+      "type": "buzzer",
+      "category": "Photo WhatsApp",
+      "question": "En quelle annee cette photo a-t-elle ete prise?",
+      "mediaUrl": "/data/whatsapp/00000581-PHOTO-2024-05-17-21-35-10.jpg",
+      "correctAnswer": "2024"
+    },
+    {
+      "id": 6,
+      "type": "buzzer",
+      "category": "Photo WhatsApp",
+      "question": "En quelle annee cette photo a-t-elle ete prise?",
+      "mediaUrl": "/data/whatsapp/00001400-PHOTO-2024-12-31-23-03-33.jpg",
+      "correctAnswer": "2024"
+    },
+    {
+      "id": 7,
+      "type": "buzzer",
+      "category": "Photo WhatsApp",
+      "question": "En quelle annee cette photo a-t-elle ete prise?",
+      "mediaUrl": "/data/whatsapp/00002284-PHOTO-2025-11-29-16-41-05.jpg",
+      "correctAnswer": "2025"
+    },
+    {
+      "id": 8,
+      "type": "multiple",
+      "category": "La Cuisine",
+      "question": "Citez un plat qu'on prepare quand on a la flemme mais qu'on veut impressionner",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Pates a la truffe / pesto", "points": 40, "revealed": false },
+        { "id": 2, "text": "Une planche apero", "points": 25, "revealed": false },
+        { "id": 3, "text": "Sushis livres (dans ses propres plats)", "points": 15, "revealed": false },
+        { "id": 4, "text": "Camembert roti", "points": 12, "revealed": false },
+        { "id": 5, "text": "Croque-monsieurs", "points": 8, "revealed": false }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "multiple",
+      "category": "Fin de Soiree",
+      "question": "Citez l'endroit ou l'on retrouve quelqu'un a 3h du matin en soiree",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Endormi sur le canape", "points": 30, "revealed": false },
+        { "id": 2, "text": "Dans la cuisine a refaire le monde", "points": 25, "revealed": false },
+        { "id": 3, "text": "Sur la piste de danse", "points": 20, "revealed": false },
+        { "id": 4, "text": "En train de commander Uber Eats", "points": 15, "revealed": false },
+        { "id": 5, "text": "Disparu sans dire au revoir (French exit)", "points": 10, "revealed": false }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "multiple",
+      "category": "Les Vacances",
+      "question": "Qu'est-ce qu'on oublie forcement en partant en vacances?",
+      "pointMultiplier": 3,
+      "answers": [
+        { "id": 1, "text": "Brosse a dents", "points": 35, "revealed": false },
+        { "id": 2, "text": "Chargeur de telephone", "points": 25, "revealed": false },
+        { "id": 3, "text": "Maillot de bain", "points": 20, "revealed": false },
+        { "id": 4, "text": "Creme solaire", "points": 15, "revealed": false },
+        { "id": 5, "text": "Son sens de l'orientation", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "multiple",
+      "category": "EuroMillions",
+      "question": "Quelle serait la premiere chose inutile achetee en cas de gros gain?",
+      "pointMultiplier": 3,
+      "answers": [
+        { "id": 1, "text": "Cave a vin geante", "points": 30, "revealed": false },
+        { "id": 2, "text": "Voiture de sport vintage", "points": 25, "revealed": false },
+        { "id": 3, "text": "Gadget de cuisine inutile", "points": 15, "revealed": false },
+        { "id": 4, "text": "Collection de baskets", "points": 10, "revealed": false },
+        { "id": 5, "text": "Billet pour l'espace", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "fastmoney",
+      "category": "Fast Money",
+      "question": "FAST MONEY - Round Final",
+      "answers": []
+    }
+  ],
+  "fastMoneyQuestions": [
+    { "question": "Nommez une boisson qu'on boit au Nouvel An", "topAnswer": "Champagne", "topPoints": 45 },
+    { "question": "Nommez quelque chose qu'on fait a minuit", "topAnswer": "S'embrasser", "topPoints": 38 },
+    { "question": "Nommez une bonne resolution", "topAnswer": "Faire du sport", "topPoints": 42 },
+    { "question": "Nommez un pays ou il fait chaud en janvier", "topAnswer": "Australie", "topPoints": 35 },
+    { "question": "Nommez quelque chose qu'on regrette le 1er janvier", "topAnswer": "Avoir trop bu", "topPoints": 50 }
+  ]
+}
