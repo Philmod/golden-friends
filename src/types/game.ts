@@ -101,6 +101,8 @@ export interface GameState {
   // Drinking rules
   showDrinkingRules: boolean;     // Whether to display drinking rules on TV
   highlightDrinkingRule: string | null;  // Rule ID to highlight temporarily
+  // Question visibility
+  questionVisible: boolean;       // Whether question is shown on TV (for face-off reveal)
 }
 
 // Socket event types
@@ -144,6 +146,7 @@ export interface ClientToServerEvents {
   'admin:startTimer': (duration: number) => void;
   'admin:stopTimer': () => void;
   'admin:toggleDrinkingRules': (show: boolean) => void;
+  'admin:showQuestion': (visible: boolean) => void;
 
   // Subscriptions
   'subscribe:tv': () => void;
@@ -199,5 +202,6 @@ export function createInitialGameState(questions: Question[]): GameState {
     showConfetti: null,
     showDrinkingRules: true,
     highlightDrinkingRule: null,
+    questionVisible: false,
   };
 }

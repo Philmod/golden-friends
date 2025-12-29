@@ -86,15 +86,15 @@ function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: strin
       }
     case 'faceoff':
       return {
-        action: "Click 'Unlock' to open buzzers. First to buzz wins control.",
-        say: "\"Question! [Read the question] - Buzz to answer first!\"",
-        next: "After buzz: Click on the winning team (Girls/Boys) to give control"
+        action: "1) One person from each team forward. 2) 'Show Question'. 3) 'Unlock'. 4) Read aloud. 5) Both buzz.",
+        say: "\"Send one person from each team!\" → \"[Question] - Buzz!\"",
+        next: "Higher answer wins. Ask winner: \"Play or pass?\" Click the team that will PLAY."
       }
     case 'play':
       return {
         action: "Team guesses answers. Click on an answer to reveal, or STRIKE if wrong.",
         say: "\"[Team], give me an answer!\" After answer: \"Let's see if it's there...\"",
-        next: "Correct: Reveal. Wrong: STRIKE. After 3 strikes: Steal phase"
+        next: "Correct: Reveal. Wrong: STRIKE. 3 strikes: Steal. All revealed: 'Give pts' then 'Next'."
       }
     case 'steal':
       return {
@@ -104,9 +104,9 @@ function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: strin
       }
     case 'reveal':
       return {
-        action: "Show remaining answers, then move to next question",
+        action: "Show remaining answers. Points should already be awarded.",
         say: "\"Let's see the answers you missed...\"",
-        next: "Click 'Next' to go to the next question"
+        next: "Click 'Next' to go to the next question."
       }
     default:
       return {
@@ -128,6 +128,7 @@ function AdminPanel() {
     prevQuestion,
     goToQuestion,
     revealAnswer,
+    hideAnswer,
     revealAll,
     updateScore,
     setPhase,
@@ -143,6 +144,7 @@ function AdminPanel() {
     startTimer,
     stopTimer,
     toggleDrinkingRules,
+    showQuestion,
   } = useGame()
 
   const [contests, setContests] = useState<ContestInfo[]>([])
@@ -492,6 +494,21 @@ function AdminPanel() {
           {/* Buzzer controls */}
           <div className="bg-gray-800 rounded-xl p-4">
             <h3 className="text-lg font-bold mb-3 text-gold-400">Buzzers</h3>
+
+            {/* Show Question button for face-off */}
+            {gameState.phase === 'faceoff' && !isBuzzerQuestion && (
+              <button
+                onClick={() => showQuestion(!gameState.questionVisible)}
+                className={`w-full mb-3 py-2 rounded-lg font-bold ${
+                  gameState.questionVisible
+                    ? 'bg-purple-600 hover:bg-purple-500'
+                    : 'bg-purple-700 hover:bg-purple-600 animate-pulse'
+                }`}
+              >
+                {gameState.questionVisible ? 'Hide Question' : 'Show Question'}
+              </button>
+            )}
+
             <div className="flex gap-2 mb-3">
               <button
                 onClick={resetBuzzers}
@@ -596,7 +613,7 @@ function AdminPanel() {
                 {currentQuestion.answers.map((answer) => (
                   <button
                     key={answer.id}
-                    onClick={() => revealAnswer(answer.id)}
+                    onClick={() => answer.revealed ? hideAnswer(answer.id) : revealAnswer(answer.id)}
                     className={`w-full text-left p-3 rounded-lg transition-colors ${
                       answer.revealed
                         ? 'bg-gold-400/30 border border-gold-400'

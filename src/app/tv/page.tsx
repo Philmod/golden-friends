@@ -248,8 +248,8 @@ function TVDisplay() {
         roundPoints={gameState.roundPoints}
       />
 
-      {/* Question - hidden during regular play, shown during faceoff */}
-      {(gameState.phase === 'faceoff' || gameState.phase === 'reveal') && (
+      {/* Question - hidden during regular play, shown during faceoff (when visible) or reveal */}
+      {((gameState.phase === 'faceoff' && gameState.questionVisible) || gameState.phase === 'reveal') && (
         <div className="text-center py-4 px-4">
           <div className="text-sm text-gold-400 uppercase tracking-wider mb-1">
             {currentQuestion?.category}
@@ -268,14 +268,22 @@ function TVDisplay() {
       {/* Phase indicator */}
       {gameState.phase === 'faceoff' && (
         <div className="text-center mb-4">
-          <span className="text-xl text-yellow-400 animate-pulse">
-            FACE-OFF - Buzz to answer first!
-          </span>
-          <BuzzerIndicator
-            buzzOrder={gameState.buzzOrder}
-            teams={gameState.teams}
-            showFirst={true}
-          />
+          {gameState.questionVisible ? (
+            <>
+              <span className="text-xl text-yellow-400 animate-pulse">
+                FACE-OFF - Buzz to answer first!
+              </span>
+              <BuzzerIndicator
+                buzzOrder={gameState.buzzOrder}
+                teams={gameState.teams}
+                showFirst={true}
+              />
+            </>
+          ) : (
+            <span className="text-2xl text-gold-400">
+              FACE-OFF
+            </span>
+          )}
         </div>
       )}
 

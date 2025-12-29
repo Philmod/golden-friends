@@ -49,6 +49,7 @@ interface GameContextValue {
   startTimer: (duration: number) => void
   stopTimer: () => void
   toggleDrinkingRules: (show: boolean) => void
+  showQuestion: (visible: boolean) => void
 
   // Subscriptions
   subscribeTV: () => void
@@ -86,6 +87,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
     socket.on('game:state', (state) => {
       setGameState(state)
+      // Reset buzzer position if player is no longer in buzz order
+      if (state.buzzOrder.length === 0 || !state.buzzOrder.find(b => b.playerId === socket.id)) {
+        setMyBuzzerPosition(null)
+      }
     })
 
     socket.on('game:stateUpdate', (partialState) => {
@@ -113,6 +118,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     socket.on('admin:contestLoaded', (data) => {
       if (data.success && data.contestId) {
         setCurrentContestId(data.contestId)
+        setMyBuzzerPosition(null)  // Reset buzzer position for all clients
         console.log(`Contest loaded: ${data.contestId} (${data.questionCount} questions)`)
       } else {
         console.error('Failed to load contest:', data.error)
@@ -285,6 +291,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
     socket.emit('admin:toggleDrinkingRules', show)
   }, [])
 
+  const showQuestion = useCallback((visible: boolean) => {
+    const socket = getSocket()
+    socket.emit('admin:showQuestion', visible)
+  }, [])
+
   // Subscriptions
   const subscribeTV = useCallback(() => {
     const socket = getSocket()
@@ -329,6 +340,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     startTimer,
     stopTimer,
     toggleDrinkingRules,
+    showQuestion,
     subscribeTV,
     subscribeAdmin,
   }

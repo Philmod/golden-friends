@@ -39,6 +39,53 @@ function loadQuestionsFromFile(contestId: string): Question[] {
   return content.questions as Question[]
 }
 
+// Path for saved game state
+const SAVED_STATE_PATH = path.join(process.cwd(), '.game-state.json')
+
+// Save game state to file
+function saveGameState() {
+  try {
+    const dataToSave = {
+      contestId: currentContestId,
+      gameState,
+      savedAt: new Date().toISOString(),
+    }
+    fs.writeFileSync(SAVED_STATE_PATH, JSON.stringify(dataToSave, null, 2))
+  } catch (err) {
+    console.error('Failed to save game state:', err)
+  }
+}
+
+// Load game state from file
+function loadSavedGameState(): boolean {
+  try {
+    if (fs.existsSync(SAVED_STATE_PATH)) {
+      const content = JSON.parse(fs.readFileSync(SAVED_STATE_PATH, 'utf-8'))
+      if (content.gameState && content.contestId) {
+        currentContestId = content.contestId
+        gameState = content.gameState
+        console.log(`Restored game state from ${content.savedAt}`)
+        return true
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load saved game state:', err)
+  }
+  return false
+}
+
+// Clear saved game state
+function clearSavedGameState() {
+  try {
+    if (fs.existsSync(SAVED_STATE_PATH)) {
+      fs.unlinkSync(SAVED_STATE_PATH)
+      console.log('Cleared saved game state')
+    }
+  } catch (err) {
+    console.error('Failed to clear saved game state:', err)
+  }
+}
+
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = '0.0.0.0'
 const port = parseInt(process.env.PORT || '3000', 10)
@@ -55,9 +102,18 @@ let currentContestId = 'default'
 let gameState: GameState = createInitialGameState(loadQuestionsFromFile(currentContestId))
 let players: Map<string, Player> = new Map()
 
+// Try to restore saved game state on startup
+if (loadSavedGameState()) {
+  // Clear players from restored state (they need to reconnect)
+  gameState.teams.girls.players = []
+  gameState.teams.boys.players = []
+  gameState.buzzOrder = []
+}
+
 // Helper functions
 function broadcastState(io: Server) {
   io.emit('game:state', gameState)
+  saveGameState()  // Persist state after each change
 }
 
 function broadcastSound(io: Server, sound: SoundType) {
@@ -87,10 +143,11 @@ function resetRoundState() {
   gameState.teams.boys.roundPoints = 0
   gameState.activeTeam = null
   gameState.controllingTeam = null
+  gameState.questionVisible = false  // Hide question until admin reveals it
 
   // Reset all answers to hidden
   const question = getCurrentQuestion()
-  if (question) {
+  if (question?.answers) {
     question.answers.forEach(a => a.revealed = false)
   }
 }
@@ -487,10 +544,19 @@ app.prepare().then(() => {
       broadcastState(io)
     })
 
+    // Admin: Show/hide question on TV
+    socket.on('admin:showQuestion', (visible: boolean) => {
+      gameState.questionVisible = visible
+      broadcastState(io)
+    })
+
     // Admin: Load contest
     socket.on('admin:loadContest', ({ contestId, resetScores }: { contestId: string; resetScores: boolean }) => {
       try {
         const questions = loadQuestionsFromFile(contestId)
+
+        // Clear saved state when loading a new contest
+        clearSavedGameState()
 
         // Save current scores if not resetting
         const girlsScore = resetScores ? 0 : gameState.teams.girls.score
@@ -509,8 +575,11 @@ app.prepare().then(() => {
           gameState.teams[player.team].players.push(player)
         })
 
-        // Broadcast new state to all clients
+        // Broadcast new state to all clients (this resets buzzers on their end)
         broadcastState(io)
+
+        // Also broadcast player list to ensure buzzer positions are cleared
+        broadcastPlayerList(io)
 
         // Notify admin of success
         socket.emit('admin:contestLoaded', {

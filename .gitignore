@@ -38,3 +38,6 @@ Thumbs.db
 
 # Testing
 coverage/
+
+# Game state persistence
+.game-state.json
