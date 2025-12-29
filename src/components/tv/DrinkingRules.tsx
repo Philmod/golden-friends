@@ -13,25 +13,19 @@ const DRINKING_RULES: DrinkingRule[] = [
   {
     id: 'strike',
     event: 'Strike (X)',
-    rule: 'Playing team drinks',
+    rule: 'Player rinks',
     icon: '❌',
   },
   {
     id: 'top-answer',
     event: 'Answer #1',
-    rule: 'Other team drinks',
+    rule: 'Other team: 1 drink',
     icon: '🥇',
-  },
-  {
-    id: 'steal-fail',
-    event: 'Failed steal',
-    rule: 'Stealing team drinks 2x',
-    icon: '🫠',
   },
   {
     id: 'sweep',
     event: 'Complete board',
-    rule: 'Other team drinks 3x',
+    rule: 'Other team: 3 drinks',
     icon: '🧹',
   },
   {
