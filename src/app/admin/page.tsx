@@ -86,7 +86,7 @@ function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: strin
       }
     case 'faceoff':
       return {
-        action: "1) One person from each team forward. 2) 'Show Question'. 3) 'Unlock'. 4) Read aloud. 5) Both buzz.",
+        action: "1) One person from each team forward. 2) 'Show Question' (unlocks buzzers). 3) Read aloud. 4) Both buzz.",
         say: "\"Send one person from each team!\" → \"[Question] - Buzz!\"",
         next: "Higher answer wins. Ask winner: \"Play or pass?\" Click the team that will PLAY."
       }
@@ -135,6 +135,7 @@ function AdminPanel() {
     setActiveTeam,
     resetBuzzers,
     lockBuzzers,
+    showWrongX,
     addStrike,
     awardPoints,
     resetRound,
@@ -350,8 +351,7 @@ function AdminPanel() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-400">#{index + 1}</span>
                   <span className={`text-xs px-2 py-0.5 rounded ${
-                    q.type === 'buzzer' ? 'bg-purple-600' :
-                    q.type === 'fastmoney' ? 'bg-red-600' : 'bg-blue-600'
+                    q.type === 'buzzer' ? 'bg-purple-600' : 'bg-blue-600'
                   }`}>
                     {q.type}
                   </span>
@@ -373,6 +373,13 @@ function AdminPanel() {
           <div className="bg-gray-800 rounded-xl p-4">
             <div className="text-sm text-gray-400 mb-1">Question {gameState.currentQuestionIndex + 1}</div>
             <h3 className="text-xl font-bold mb-2">{currentQuestion?.question}</h3>
+            {/* Show correct answer for buzzer questions */}
+            {isBuzzerQuestion && currentQuestion?.correctAnswer && (
+              <div className="mb-2 p-2 bg-green-900/50 border border-green-600 rounded-lg">
+                <span className="text-xs text-green-400 uppercase">Answer: </span>
+                <span className="text-green-300 font-bold">{currentQuestion.correctAnswer}</span>
+              </div>
+            )}
             <div className="flex gap-2 flex-wrap">
               <span className={`text-xs px-2 py-1 rounded ${
                 gameState.phase === 'faceoff' ? 'bg-yellow-600' :
@@ -495,18 +502,29 @@ function AdminPanel() {
           <div className="bg-gray-800 rounded-xl p-4">
             <h3 className="text-lg font-bold mb-3 text-gold-400">Buzzers</h3>
 
-            {/* Show Question button for face-off */}
-            {gameState.phase === 'faceoff' && !isBuzzerQuestion && (
-              <button
-                onClick={() => showQuestion(!gameState.questionVisible)}
-                className={`w-full mb-3 py-2 rounded-lg font-bold ${
-                  gameState.questionVisible
-                    ? 'bg-purple-600 hover:bg-purple-500'
-                    : 'bg-purple-700 hover:bg-purple-600 animate-pulse'
-                }`}
-              >
-                {gameState.questionVisible ? 'Hide Question' : 'Show Question'}
-              </button>
+            {/* Show Question button for face-off and buzzer questions */}
+            {(gameState.phase === 'faceoff' || isBuzzerQuestion) && (
+              <div className="flex gap-2 mb-3">
+                <button
+                  onClick={() => showQuestion(!gameState.questionVisible)}
+                  className={`flex-1 py-2 rounded-lg font-bold ${
+                    gameState.questionVisible
+                      ? 'bg-purple-600 hover:bg-purple-500'
+                      : 'bg-purple-700 hover:bg-purple-600 animate-pulse'
+                  }`}
+                >
+                  {gameState.questionVisible ? 'Hide Question' : isBuzzerQuestion ? 'Show Photo' : 'Show Question'}
+                </button>
+                {!isBuzzerQuestion && (
+                  <button
+                    onClick={showWrongX}
+                    className="px-4 py-2 rounded-lg font-bold bg-red-700 hover:bg-red-600 text-xl"
+                    title="Show X for wrong answer"
+                  >
+                    ✗
+                  </button>
+                )}
+              </div>
             )}
 
             <div className="flex gap-2 mb-3">

@@ -167,23 +167,31 @@ function TVDisplay() {
           roundPoints={gameState.roundPoints}
         />
 
-        {/* Question */}
+        {/* Question - only show when questionVisible */}
         <div className="flex-1 flex flex-col items-center justify-center">
-          <div className="text-lg text-gold-400 uppercase tracking-wider mb-2">
-            {currentQuestion.category}
-          </div>
-          <h2 className="text-4xl font-bold text-center mb-8 max-w-3xl">
-            {currentQuestion.question}
-          </h2>
+          {gameState.questionVisible ? (
+            <>
+              <div className="text-lg text-gold-400 uppercase tracking-wider mb-2">
+                {currentQuestion.category}
+              </div>
+              <h2 className="text-4xl font-bold text-center mb-8 max-w-3xl">
+                {currentQuestion.question}
+              </h2>
 
-          {/* Photo */}
-          {currentQuestion.mediaUrl && (
-            <div className="mb-8">
-              <img
-                src={currentQuestion.mediaUrl}
-                alt="Question"
-                className="max-h-[50vh] rounded-xl border-4 border-gold-400"
-              />
+              {/* Photo */}
+              {currentQuestion.mediaUrl && (
+                <div className="mb-8">
+                  <img
+                    src={currentQuestion.mediaUrl}
+                    alt="Question"
+                    className="max-h-[50vh] rounded-xl border-4 border-gold-400"
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-4xl text-gold-400 font-bold">
+              PHOTO QUESTION
             </div>
           )}
 

@@ -1,5 +1,5 @@
 // Question types
-export type QuestionType = 'multiple' | 'buzzer' | 'fastmoney';
+export type QuestionType = 'multiple' | 'buzzer';
 export type TeamId = 'girls' | 'boys';
 export type GamePhase =
   | 'lobby'      // Waiting for players
@@ -7,8 +7,6 @@ export type GamePhase =
   | 'play'       // Team is guessing answers
   | 'steal'      // Other team can steal
   | 'reveal'     // Show all answers
-  | 'photo'      // Photo buzzer round
-  | 'fastmoney'  // Fast money finale
   | 'complete';  // Game over
 
 // Answer structure
@@ -30,13 +28,6 @@ export interface Question {
   mediaUrl?: string;       // For photo questions
   timeLimit?: number;      // Timer in seconds
   pointMultiplier?: number; // 1x, 2x, 3x
-}
-
-// Fast Money question (simpler structure)
-export interface FastMoneyQuestion {
-  id: number;
-  question: string;
-  answers: Array<{ text: string; points: number }>;
 }
 
 // Player structure
@@ -66,15 +57,6 @@ export interface BuzzEvent {
   timestamp: number;
 }
 
-// Fast Money state
-export interface FastMoneyState {
-  currentPlayer: 1 | 2;
-  player1Answers: Array<{ answer: string; points: number; duplicate: boolean }>;
-  player2Answers: Array<{ answer: string; points: number; duplicate: boolean }>;
-  timeRemaining: number;
-  totalPoints: number;
-}
-
 // Main game state
 export interface GameState {
   phase: GamePhase;
@@ -91,7 +73,6 @@ export interface GameState {
   isLocked: boolean;              // Prevent buzzing
   showWrongX: boolean;
   roundPoints: number;            // Points at stake this round
-  fastMoney?: FastMoneyState;
   // Timer state
   timerRunning: boolean;
   timerEndTime: number | null;    // Unix timestamp when timer ends

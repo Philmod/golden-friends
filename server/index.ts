@@ -457,15 +457,12 @@ app.prepare().then(() => {
       // Show confetti for big wins (20+ points)
       if (gameState.roundPoints >= 20) {
         gameState.showConfetti = team
-        broadcastSound(io, 'applause')
 
         // Clear confetti after 4 seconds
         setTimeout(() => {
           gameState.showConfetti = null
           broadcastState(io)
         }, 4000)
-      } else {
-        broadcastSound(io, 'correct')
       }
 
       broadcastState(io)
@@ -547,6 +544,10 @@ app.prepare().then(() => {
     // Admin: Show/hide question on TV
     socket.on('admin:showQuestion', (visible: boolean) => {
       gameState.questionVisible = visible
+      // Automatically unlock buzzers when showing question
+      if (visible) {
+        gameState.isLocked = false
+      }
       broadcastState(io)
     })
 

@@ -17,7 +17,7 @@
 - **TypeScript Types** (`src/types/game.ts`): Complete type definitions for:
   - GameState, Question, Answer, Player, Team
   - Socket events (client-to-server and server-to-client)
-  - Game phases (lobby, faceoff, play, steal, reveal, photo, fastmoney)
+  - Game phases (lobby, faceoff, play, steal, reveal)
 
 - **Game Context** (`src/context/GameContext.tsx`): React context providing:
   - Real-time game state synchronization
@@ -66,7 +66,6 @@
   - 5 photo buzzer rounds (using WhatsApp images)
   - 2 classic rounds (2x points)
   - 2 classic rounds (3x points)
-  - 1 Fast Money finale
 
 - **Personalized question**: "Qui envoie le plus de messages dans le groupe WhatsApp?" with real data from chat analysis
 - **Adding new contests**: Create a JSON file in `src/data/contests/` with `name`, `description`, `questions` array
@@ -154,21 +153,15 @@
 
 ### Nice to Have (If Time Permits)
 
-10. **Fast Money Implementation**
-    - [ ] Build Fast Money UI (timer, 5 questions)
-    - [ ] Implement player 1 / player 2 flow
-    - [ ] Add duplicate answer detection
-    - Current: Fast Money round exists but UI not fully implemented
-
-11. **Visual Polish**
-    - [ ] Add confetti on big point wins
+10. **Visual Polish**
+    - [x] Add confetti on big point wins
     - [ ] Add team celebration animations
     - [ ] Improve mobile responsiveness
     - [ ] Add loading states
 
-12. **Game Features**
-    - [ ] Drinking rules display on TV
-    - [ ] Timer for buzzer questions
+11. **Game Features**
+    - [x] Drinking rules display on TV
+    - [x] Timer for buzzer questions
     - [ ] History/undo for admin actions
 
 ---
