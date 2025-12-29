@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { QRCodeSVG } from 'qrcode.react'
 import { GameProvider, useGame } from '@/context/GameContext'
 import AnswerBoard from '@/components/tv/AnswerBoard'
 import ScoreBoard from '@/components/tv/ScoreBoard'
@@ -34,6 +35,15 @@ function getHostPrompt(phase: string, isBuzzerQuestion: boolean, teamName?: stri
 function TVDisplay() {
   const { gameState, subscribeTV, isConnected } = useGame()
   const [hostMode, setHostMode] = useState(false)
+  const [serverUrl, setServerUrl] = useState('')
+
+  // Get server URL for QR code
+  useEffect(() => {
+    const protocol = window.location.protocol
+    const host = window.location.hostname
+    const port = window.location.port || '3000'
+    setServerUrl(`${protocol}//${host}:${port}`)
+  }, [])
 
   // Toggle host mode with 'H' key
   useEffect(() => {
@@ -97,7 +107,21 @@ function TVDisplay() {
           </div>
         </div>
 
-        <p className="text-xl text-gray-500 mt-12">
+        {/* QR Code */}
+        {serverUrl && (
+          <div className="mt-12 bg-white p-6 rounded-xl">
+            <QRCodeSVG
+              value={`${serverUrl}/buzzer`}
+              size={200}
+              level="M"
+            />
+            <p className="text-gray-800 text-center mt-4 font-medium">
+              Scan to join
+            </p>
+          </div>
+        )}
+
+        <p className="text-xl text-gray-500 mt-8">
           Waiting for the game to start...
         </p>
 
