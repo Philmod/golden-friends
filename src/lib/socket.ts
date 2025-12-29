@@ -8,8 +8,9 @@ export function getSocket(): Socket<ServerToClientEvents, ClientToServerEvents> 
     socket = io({
       autoConnect: true,
       reconnection: true,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
+      reconnectionDelayMax: 300000,
     })
 
     socket.on('connect', () => {
