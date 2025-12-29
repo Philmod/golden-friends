@@ -48,19 +48,19 @@ function PasswordPrompt({ onSuccess }: { onSuccess: () => void }) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Mot de passe"
+          placeholder="Password"
           className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-gold-400"
           autoFocus
         />
         {error && (
-          <p className="text-red-500 text-sm mb-4">Mot de passe incorrect</p>
+          <p className="text-red-500 text-sm mb-4">Incorrect password</p>
         )}
         <button
           type="submit"
           disabled={loading}
           className="w-full bg-gold-400 text-gray-900 font-bold py-3 rounded-lg hover:bg-gold-300 disabled:opacity-50"
         >
-          {loading ? 'Verification...' : 'Entrer'}
+          {loading ? 'Verifying...' : 'Enter'}
         </button>
       </form>
     </div>
@@ -71,46 +71,46 @@ function PasswordPrompt({ onSuccess }: { onSuccess: () => void }) {
 function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: string; say: string; next: string } {
   if (isBuzzerQuestion) {
     return {
-      action: "Cliquez 'Debloquer' pour ouvrir les buzzers, puis 'Correct' ou 'Faux' apres la reponse",
-      say: "\"Regardez bien la photo... Buzzez quand vous savez!\"",
-      next: "Apres la reponse: Correct (+10 pts) ou Faux (-5 pts, joueur suivant)"
+      action: "Click 'Unlock' to open buzzers, then 'Correct' or 'Wrong' after the answer",
+      say: "\"Look at the photo carefully... Buzz when you know!\"",
+      next: "After answer: Correct (+10 pts) or Wrong (-5 pts, next player)"
     }
   }
 
   switch (phase) {
     case 'lobby':
       return {
-        action: "Attendez que tous les joueurs rejoignent via /buzzer, puis cliquez 'Face-off'",
-        say: "\"Bienvenue a Golden Friends! Scannez le QR code pour rejoindre votre equipe.\"",
-        next: "Quand pret: Cliquez 'Face-off' pour commencer"
+        action: "Wait for all players to join via /buzzer, then click 'Face-off'",
+        say: "\"Welcome to Golden Friends! Scan the QR code to join your team.\"",
+        next: "When ready: Click 'Face-off' to start"
       }
     case 'faceoff':
       return {
-        action: "Cliquez 'Debloquer' pour ouvrir les buzzers. Le premier qui buzze gagne le controle.",
-        say: "\"Question! [Lire la question] - Buzzez pour repondre en premier!\"",
-        next: "Apres buzz: Cliquez sur l'equipe gagnante (Filles/Garcons) pour donner le controle"
+        action: "Click 'Unlock' to open buzzers. First to buzz wins control.",
+        say: "\"Question! [Read the question] - Buzz to answer first!\"",
+        next: "After buzz: Click on the winning team (Girls/Boys) to give control"
       }
     case 'play':
       return {
-        action: "L'equipe devine les reponses. Cliquez sur une reponse pour la reveler, ou STRIKE si faux.",
-        say: "\"[Equipe], donnez-moi une reponse!\" Apres reponse: \"Voyons si c'est la...\"",
-        next: "Bonne reponse: Reveler. Mauvaise: STRIKE. Apres 3 strikes: Phase Steal"
+        action: "Team guesses answers. Click on an answer to reveal, or STRIKE if wrong.",
+        say: "\"[Team], give me an answer!\" After answer: \"Let's see if it's there...\"",
+        next: "Correct: Reveal. Wrong: STRIKE. After 3 strikes: Steal phase"
       }
     case 'steal':
       return {
-        action: "L'autre equipe a UNE chance de voler tous les points. Pas de strike possible.",
-        say: "\"[Autre equipe], vous pouvez voler! Concertez-vous... Quelle est votre reponse?\"",
-        next: "Bonne reponse: 'Donner pts' a l'equipe qui vole. Mauvaise: 'Donner pts' a l'equipe originale"
+        action: "Other team has ONE chance to steal all points. No strikes possible.",
+        say: "\"[Other team], you can steal! Discuss... What's your answer?\"",
+        next: "Correct: 'Give pts' to stealing team. Wrong: 'Give pts' to original team"
       }
     case 'reveal':
       return {
-        action: "Montrez les reponses restantes, puis passez a la question suivante",
-        say: "\"Voyons les autres reponses que vous avez manquees...\"",
-        next: "Cliquez 'Suivante' pour passer a la prochaine question"
+        action: "Show remaining answers, then move to next question",
+        say: "\"Let's see the answers you missed...\"",
+        next: "Click 'Next' to go to the next question"
       }
     default:
       return {
-        action: "Selectionnez une phase pour commencer",
+        action: "Select a phase to begin",
         say: "",
         next: ""
       }
@@ -178,7 +178,7 @@ function AdminPanel() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
         <div className="text-2xl text-gray-400">
-          {isConnected ? 'Chargement...' : 'Connexion au serveur...'}
+          {isConnected ? 'Loading...' : 'Connecting to server...'}
         </div>
       </div>
     )
@@ -199,7 +199,7 @@ function AdminPanel() {
             className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
               gameState.showDrinkingRules ? 'bg-yellow-600' : 'bg-gray-700'
             }`}
-            title="Afficher/masquer les regles de boisson sur TV"
+            title="Show/hide drinking rules on TV"
           >
             <span>🍺</span>
             <span>{gameState.showDrinkingRules ? 'ON' : 'OFF'}</span>
@@ -207,10 +207,10 @@ function AdminPanel() {
           <span className={`px-3 py-1 rounded-full text-sm ${
             isConnected ? 'bg-green-600' : 'bg-red-600'
           }`}>
-            {isConnected ? 'Connecte' : 'Deconnecte'}
+            {isConnected ? 'Connected' : 'Disconnected'}
           </span>
           <span className="text-gray-400">
-            {players.length} joueurs
+            {players.length} players
           </span>
         </div>
       </div>
@@ -218,7 +218,7 @@ function AdminPanel() {
       {/* Contest Selector */}
       <div className="bg-gray-800 rounded-xl p-3 mb-4">
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-sm text-gray-400">Concours:</span>
+          <span className="text-sm text-gray-400">Contest:</span>
           {contests.map((contest) => (
             <button
               key={contest.id}
@@ -234,7 +234,7 @@ function AdminPanel() {
             </button>
           ))}
           {contests.length === 0 && (
-            <span className="text-gray-500 text-sm">Chargement...</span>
+            <span className="text-gray-500 text-sm">Loading...</span>
           )}
         </div>
       </div>
@@ -246,7 +246,7 @@ function AdminPanel() {
           className="w-full p-3 flex items-center justify-between text-left"
         >
           <span className="text-sm font-bold text-indigo-300">
-            Aide - Que faire maintenant?
+            Help - What to do now?
           </span>
           <span className="text-indigo-400">{showHelp ? '▼' : '▶'}</span>
         </button>
@@ -258,13 +258,13 @@ function AdminPanel() {
             </div>
             {phaseHelp.say && (
               <div className="flex gap-2">
-                <span className="text-yellow-400 font-bold text-sm shrink-0">A dire:</span>
+                <span className="text-yellow-400 font-bold text-sm shrink-0">Say:</span>
                 <span className="text-sm text-gray-200 italic">{phaseHelp.say}</span>
               </div>
             )}
             {phaseHelp.next && (
               <div className="flex gap-2">
-                <span className="text-blue-400 font-bold text-sm shrink-0">Ensuite:</span>
+                <span className="text-blue-400 font-bold text-sm shrink-0">Next:</span>
                 <span className="text-sm text-gray-200">{phaseHelp.next}</span>
               </div>
             )}
@@ -276,9 +276,9 @@ function AdminPanel() {
       {showLoadModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 className="text-xl font-bold text-gold-400 mb-4">Charger un concours</h3>
+            <h3 className="text-xl font-bold text-gold-400 mb-4">Load a contest</h3>
             <p className="text-gray-300 mb-4">
-              Voulez-vous charger le concours &quot;{contests.find(c => c.id === showLoadModal)?.name}&quot;?
+              Do you want to load the contest &quot;{contests.find(c => c.id === showLoadModal)?.name}&quot;?
             </p>
             <label className="flex items-center gap-3 mb-6 cursor-pointer">
               <input
@@ -287,7 +287,7 @@ function AdminPanel() {
                 onChange={(e) => setResetScores(e.target.checked)}
                 className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-gold-400 focus:ring-gold-400"
               />
-              <span className="text-gray-300">Reinitialiser les scores</span>
+              <span className="text-gray-300">Reset scores</span>
             </label>
             <div className="flex gap-3">
               <button
@@ -297,13 +297,13 @@ function AdminPanel() {
                 }}
                 className="flex-1 bg-gray-700 hover:bg-gray-600 py-2 rounded-lg"
               >
-                Annuler
+                Cancel
               </button>
               <button
                 onClick={() => handleLoadContest(showLoadModal)}
                 className="flex-1 bg-gold-400 text-gray-900 font-bold py-2 rounded-lg hover:bg-gold-300"
               >
-                Charger
+                Load
               </button>
             </div>
           </div>
@@ -322,14 +322,14 @@ function AdminPanel() {
               disabled={gameState.currentQuestionIndex === 0}
               className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 py-2 px-4 rounded-lg"
             >
-              Precedente
+              Previous
             </button>
             <button
               onClick={nextQuestion}
               disabled={gameState.currentQuestionIndex === gameState.questions.length - 1}
               className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 py-2 px-4 rounded-lg"
             >
-              Suivante
+              Next
             </button>
           </div>
 
@@ -400,7 +400,7 @@ function AdminPanel() {
                 >
                   1. Lobby
                 </button>
-                <span className="text-xs text-gray-400">Attente des joueurs</span>
+                <span className="text-xs text-gray-400">Waiting for players</span>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -411,7 +411,7 @@ function AdminPanel() {
                 >
                   2. Face-off
                 </button>
-                <span className="text-xs text-gray-400">Buzzers ouverts</span>
+                <span className="text-xs text-gray-400">Buzzers open</span>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -422,7 +422,7 @@ function AdminPanel() {
                 >
                   3. Play
                 </button>
-                <span className="text-xs text-gray-400">Equipe devine les reponses</span>
+                <span className="text-xs text-gray-400">Team guesses answers</span>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -433,14 +433,14 @@ function AdminPanel() {
                 >
                   4. Steal
                 </button>
-                <span className="text-xs text-gray-400">Autre equipe peut voler</span>
+                <span className="text-xs text-gray-400">Other team can steal</span>
               </div>
             </div>
           </div>
 
           {/* Team controls */}
           <div className="bg-gray-800 rounded-xl p-4">
-            <h3 className="text-lg font-bold mb-3 text-gold-400">Equipe active</h3>
+            <h3 className="text-lg font-bold mb-3 text-gold-400">Active team</h3>
             <div className="grid grid-cols-2 gap-2 mb-4">
               <button
                 onClick={() => setActiveTeam('girls')}
@@ -450,7 +450,7 @@ function AdminPanel() {
                     : 'bg-pink-900 hover:bg-pink-800'
                 }`}
               >
-                Filles
+                Girls
               </button>
               <button
                 onClick={() => setActiveTeam('boys')}
@@ -460,7 +460,7 @@ function AdminPanel() {
                     : 'bg-blue-900 hover:bg-blue-800'
                 }`}
               >
-                Garcons
+                Boys
               </button>
             </div>
 
@@ -478,13 +478,13 @@ function AdminPanel() {
                 onClick={() => awardPoints('girls')}
                 className="bg-pink-700 hover:bg-pink-600 py-2 rounded-lg"
               >
-                Donner pts Filles
+                Give pts Girls
               </button>
               <button
                 onClick={() => awardPoints('boys')}
                 className="bg-blue-700 hover:bg-blue-600 py-2 rounded-lg"
               >
-                Donner pts Garcons
+                Give pts Boys
               </button>
             </div>
           </div>
@@ -507,7 +507,7 @@ function AdminPanel() {
                     : 'bg-green-700 hover:bg-green-600'
                 }`}
               >
-                {gameState.isLocked ? 'Debloquer' : 'Bloquer'}
+                {gameState.isLocked ? 'Unlock' : 'Lock'}
               </button>
             </div>
 
@@ -552,7 +552,7 @@ function AdminPanel() {
             {/* Buzz order */}
             {gameState.buzzOrder.length > 0 && (
               <div className="space-y-1">
-                <div className="text-sm text-gray-400">Ordre des buzzers:</div>
+                <div className="text-sm text-gray-400">Buzzer order:</div>
                 {gameState.buzzOrder.map((buzz, index) => (
                   <div
                     key={buzz.playerId}
@@ -579,7 +579,7 @@ function AdminPanel() {
                   onClick={() => markCorrect(false)}
                   className="bg-red-700 hover:bg-red-600 py-2 rounded-lg"
                 >
-                  Faux (-5)
+                  Wrong (-5)
                 </button>
               </div>
             )}
@@ -591,7 +591,7 @@ function AdminPanel() {
           {/* Answer controls (for multiple answer questions) */}
           {!isBuzzerQuestion && currentQuestion && (
             <div className="bg-gray-800 rounded-xl p-4">
-              <h3 className="text-lg font-bold mb-3 text-gold-400">Reponses</h3>
+              <h3 className="text-lg font-bold mb-3 text-gold-400">Answers</h3>
               <div className="space-y-2 mb-4">
                 {currentQuestion.answers.map((answer) => (
                   <button
@@ -616,7 +616,7 @@ function AdminPanel() {
                 onClick={revealAll}
                 className="w-full bg-purple-700 hover:bg-purple-600 py-2 rounded-lg"
               >
-                Reveler tout
+                Reveal all
               </button>
             </div>
           )}
@@ -628,7 +628,7 @@ function AdminPanel() {
             {/* Girls score */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-pink-400 font-bold">Filles</span>
+                <span className="text-pink-400 font-bold">Girls</span>
                 <span className="text-2xl font-bold">{gameState.teams.girls.score}</span>
               </div>
               <div className="flex gap-2">
@@ -662,7 +662,7 @@ function AdminPanel() {
             {/* Boys score */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-400 font-bold">Garcons</span>
+                <span className="text-blue-400 font-bold">Boys</span>
                 <span className="text-2xl font-bold">{gameState.teams.boys.score}</span>
               </div>
               <div className="flex gap-2">
@@ -704,7 +704,7 @@ function AdminPanel() {
 
           {/* Players list */}
           <div className="bg-gray-800 rounded-xl p-4">
-            <h3 className="text-lg font-bold mb-3 text-gold-400">Joueurs ({players.length})</h3>
+            <h3 className="text-lg font-bold mb-3 text-gold-400">Players ({players.length})</h3>
             <div className="space-y-1 max-h-[200px] overflow-y-auto">
               {players.map((player) => (
                 <div
@@ -720,7 +720,7 @@ function AdminPanel() {
                 </div>
               ))}
               {players.length === 0 && (
-                <div className="text-gray-500 text-sm">Aucun joueur</div>
+                <div className="text-gray-500 text-sm">No players</div>
               )}
             </div>
           </div>
@@ -743,7 +743,7 @@ export default function AdminPage() {
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="text-2xl text-gray-400">Chargement...</div>
+        <div className="text-2xl text-gray-400">Loading...</div>
       </div>
     )
   }

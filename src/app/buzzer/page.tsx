@@ -19,18 +19,18 @@ function TeamSelector({ onSelect }: { onSelect: (name: string, team: TeamId) => 
 
       <div className="w-full max-w-sm space-y-6">
         <div>
-          <label className="block text-sm text-gray-400 mb-2">Ton prenom</label>
+          <label className="block text-sm text-gray-400 mb-2">Your name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Entre ton prenom..."
+            placeholder="Enter your name..."
             className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white text-lg focus:outline-none focus:border-gold-400"
             autoFocus
           />
         </div>
 
-        <div className="text-center text-gray-400">Choisis ton equipe</div>
+        <div className="text-center text-gray-400">Choose your team</div>
 
         <div className="grid grid-cols-2 gap-4">
           <button
@@ -42,7 +42,7 @@ function TeamSelector({ onSelect }: { onSelect: (name: string, team: TeamId) => 
               boxShadow: name.trim() ? '0 0 30px rgba(255, 105, 180, 0.5)' : 'none'
             }}
           >
-            Les Filles
+            Girls
           </button>
 
           <button
@@ -54,7 +54,7 @@ function TeamSelector({ onSelect }: { onSelect: (name: string, team: TeamId) => 
               boxShadow: name.trim() ? '0 0 30px rgba(65, 105, 225, 0.5)' : 'none'
             }}
           >
-            Les Garcons
+            Boys
           </button>
         </div>
       </div>
@@ -76,20 +76,20 @@ function BuzzerButton() {
   const hasBuzzed = myBuzzerPosition !== null
 
   const teamColor = myTeam === 'girls' ? '#FF69B4' : '#4169E1'
-  const teamName = myTeam === 'girls' ? 'Les Filles' : 'Les Garcons'
+  const teamName = myTeam === 'girls' ? 'Girls' : 'Boys'
 
   // Determine button state
   let buttonText = 'BUZZ!'
   let buttonStyle = 'opacity-100'
 
   if (!isConnected) {
-    buttonText = 'Connexion...'
+    buttonText = 'Connecting...'
     buttonStyle = 'opacity-50'
   } else if (gameState?.isLocked) {
-    buttonText = 'ATTENDEZ...'
+    buttonText = 'WAIT...'
     buttonStyle = 'opacity-50'
   } else if (hasBuzzed) {
-    buttonText = myBuzzerPosition === 1 ? 'PREMIER!' : `#${myBuzzerPosition}`
+    buttonText = myBuzzerPosition === 1 ? 'FIRST!' : `#${myBuzzerPosition}`
     buttonStyle = 'opacity-100'
   }
 
@@ -101,7 +101,7 @@ function BuzzerButton() {
       {/* Header */}
       <div className="p-4 flex items-center justify-between">
         <div>
-          <div className="text-sm text-gray-400">Equipe</div>
+          <div className="text-sm text-gray-400">Team</div>
           <div className="font-bold" style={{ color: teamColor }}>
             {teamName}
           </div>
@@ -113,7 +113,7 @@ function BuzzerButton() {
             onClick={leaveGame}
             className="text-sm text-gray-400 hover:text-white"
           >
-            Quitter
+            Leave
           </button>
         </div>
       </div>
@@ -122,21 +122,21 @@ function BuzzerButton() {
       {gameState && (
         <div className="px-4 py-2 text-center">
           <div className="text-sm text-gray-400">
-            {gameState.phase === 'lobby' && 'En attente du jeu...'}
-            {gameState.phase === 'faceoff' && 'Face-off! Buzzez en premier!'}
-            {gameState.phase === 'play' && `${gameState.teams[gameState.controllingTeam || 'girls'].name} joue`}
-            {gameState.phase === 'steal' && `${gameState.teams[gameState.activeTeam || 'girls'].name} peut voler!`}
-            {gameState.phase === 'photo' && 'Question photo!'}
+            {gameState.phase === 'lobby' && 'Waiting for game...'}
+            {gameState.phase === 'faceoff' && 'Face-off! Buzz first!'}
+            {gameState.phase === 'play' && `${gameState.teams[gameState.controllingTeam || 'girls'].name} plays`}
+            {gameState.phase === 'steal' && `${gameState.teams[gameState.activeTeam || 'girls'].name} can steal!`}
+            {gameState.phase === 'photo' && 'Photo question!'}
           </div>
 
           {/* Scores */}
           <div className="flex justify-center gap-8 mt-2">
             <div>
-              <span className="text-pink-400 text-sm">Filles</span>
+              <span className="text-pink-400 text-sm">Girls</span>
               <span className="ml-2 font-bold">{gameState.teams.girls.score}</span>
             </div>
             <div>
-              <span className="text-blue-400 text-sm">Garcons</span>
+              <span className="text-blue-400 text-sm">Boys</span>
               <span className="ml-2 font-bold">{gameState.teams.boys.score}</span>
             </div>
           </div>
@@ -173,7 +173,7 @@ function BuzzerButton() {
               backgroundColor: myBuzzerPosition === 1 ? '#22c55e' : '#6b7280',
             }}
           >
-            {myBuzzerPosition === 1 ? 'Tu es PREMIER!' : `Position: #${myBuzzerPosition}`}
+            {myBuzzerPosition === 1 ? 'You are FIRST!' : `Position: #${myBuzzerPosition}`}
           </div>
         </div>
       )}

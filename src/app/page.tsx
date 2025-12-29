@@ -20,7 +20,7 @@ export default function Home() {
         Golden Friends
       </h1>
       <p className="text-xl text-gray-300 mb-12">
-        Une Famille en Or - Edition Amis
+        Family Feud - Friends Edition
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full">
@@ -32,7 +32,7 @@ export default function Home() {
           <div className="text-4xl mb-4">📺</div>
           <h2 className="text-2xl font-bold text-gold-400 mb-2">TV Display</h2>
           <p className="text-gray-400">
-            Afficher sur la television
+            Display on the TV
           </p>
         </a>
 
@@ -44,7 +44,7 @@ export default function Home() {
           <div className="text-4xl mb-4">🎮</div>
           <h2 className="text-2xl font-bold text-gold-400 mb-2">Admin</h2>
           <p className="text-gray-400">
-            Controle du jeu pour l&apos;animateur
+            Game control for the host
           </p>
         </a>
 
@@ -56,7 +56,7 @@ export default function Home() {
           <div className="text-4xl mb-4">🔔</div>
           <h2 className="text-2xl font-bold text-gold-400 mb-2">Buzzer</h2>
           <p className="text-gray-400">
-            Pour les joueurs
+            For players
           </p>
         </a>
       </div>
@@ -70,7 +70,7 @@ export default function Home() {
             level="M"
           />
           <p className="text-gray-800 text-center mt-4 font-medium">
-            Scannez pour rejoindre
+            Scan to join
           </p>
         </div>
       )}

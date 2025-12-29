@@ -13,31 +13,31 @@ const DRINKING_RULES: DrinkingRule[] = [
   {
     id: 'strike',
     event: 'Strike (X)',
-    rule: "L'equipe qui joue boit",
+    rule: 'Playing team drinks',
     icon: '❌',
   },
   {
     id: 'top-answer',
-    event: 'Reponse #1',
-    rule: "L'autre equipe boit",
+    event: 'Answer #1',
+    rule: 'Other team drinks',
     icon: '🥇',
   },
   {
     id: 'steal-fail',
-    event: 'Vol rate',
-    rule: "L'equipe qui vole boit 2x",
+    event: 'Failed steal',
+    rule: 'Stealing team drinks 2x',
     icon: '🫠',
   },
   {
     id: 'sweep',
-    event: 'Tableau complet',
-    rule: "L'autre equipe boit 3x",
+    event: 'Complete board',
+    rule: 'Other team drinks 3x',
     icon: '🧹',
   },
   {
     id: 'buzzer-wrong',
-    event: 'Buzzer + mauvaise reponse',
-    rule: 'Le joueur boit',
+    event: 'Buzzer + wrong answer',
+    rule: 'Player drinks',
     icon: '🔔',
   },
 ]
@@ -71,7 +71,7 @@ export default function DrinkingRules({ show, highlightRule }: DrinkingRulesProp
       <div className="bg-gray-900/90 border border-gold-400/50 rounded-xl p-4 max-w-xs">
         <h3 className="text-gold-400 font-bold text-lg mb-3 flex items-center gap-2">
           <span>🍺</span>
-          <span>Regles de Boisson</span>
+          <span>Drinking Rules</span>
         </h3>
         <div className="space-y-2">
           {DRINKING_RULES.map((rule) => (

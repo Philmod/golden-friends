@@ -170,7 +170,7 @@ export function createInitialGameState(questions: Question[]): GameState {
     teams: {
       girls: {
         id: 'girls',
-        name: 'Les Filles',
+        name: 'Girls',
         color: '#FF69B4',
         score: 0,
         roundPoints: 0,
@@ -179,7 +179,7 @@ export function createInitialGameState(questions: Question[]): GameState {
       },
       boys: {
         id: 'boys',
-        name: 'Les Garcons',
+        name: 'Boys',
         color: '#4169E1',
         score: 0,
         roundPoints: 0,

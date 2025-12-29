@@ -13,19 +13,19 @@ import DrinkingRules from '@/components/tv/DrinkingRules'
 // Host prompts for each phase
 function getHostPrompt(phase: string, isBuzzerQuestion: boolean, teamName?: string): string {
   if (isBuzzerQuestion) {
-    return "\"Regardez bien cette photo... Buzzez quand vous connaissez la reponse!\""
+    return "\"Look at this photo carefully... Buzz when you know the answer!\""
   }
   switch (phase) {
     case 'lobby':
-      return "\"Bienvenue a Golden Friends! Rejoignez votre equipe en scannant le QR code.\""
+      return "\"Welcome to Golden Friends! Join your team by scanning the QR code.\""
     case 'faceoff':
-      return "\"[Lire la question] Premier a buzzer gagne le controle!\""
+      return "\"[Read the question] First to buzz wins control!\""
     case 'play':
-      return `\"${teamName || 'Equipe'}, donnez-moi une reponse!\"`
+      return `\"${teamName || 'Team'}, give me an answer!\"`
     case 'steal':
-      return `\"${teamName || 'Autre equipe'}, vous pouvez voler! Concertez-vous...\"`
+      return `\"${teamName || 'Other team'}, you can steal! Discuss...\"`
     case 'reveal':
-      return "\"Voyons les reponses que vous avez manquees...\""
+      return "\"Let's see the answers you missed...\""
     default:
       return ""
   }
@@ -54,7 +54,7 @@ function TVDisplay() {
     return (
       <div className="min-h-screen tv-background flex items-center justify-center">
         <div className="text-2xl text-gray-400">
-          {isConnected ? 'Chargement...' : 'Connexion au serveur...'}
+          {isConnected ? 'Loading...' : 'Connecting to server...'}
         </div>
       </div>
     )
@@ -67,7 +67,7 @@ function TVDisplay() {
     return (
       <main className="min-h-screen tv-background flex flex-col items-center justify-center p-8">
         <h1 className="text-7xl font-bold text-gold-400 mb-8">Golden Friends</h1>
-        <p className="text-3xl text-gray-300 mb-12">Une Famille en Or - Edition Amis</p>
+        <p className="text-3xl text-gray-300 mb-12">Family Feud - Friends Edition</p>
 
         <div className="grid grid-cols-2 gap-16">
           <div className="text-center">
@@ -80,7 +80,7 @@ function TVDisplay() {
             <div className="text-6xl font-bold text-white">
               {gameState.teams.girls.players.length}
             </div>
-            <div className="text-xl text-gray-400 mt-2">joueurs</div>
+            <div className="text-xl text-gray-400 mt-2">players</div>
           </div>
 
           <div className="text-center">
@@ -93,12 +93,12 @@ function TVDisplay() {
             <div className="text-6xl font-bold text-white">
               {gameState.teams.boys.players.length}
             </div>
-            <div className="text-xl text-gray-400 mt-2">joueurs</div>
+            <div className="text-xl text-gray-400 mt-2">players</div>
           </div>
         </div>
 
         <p className="text-xl text-gray-500 mt-12">
-          En attente du debut du jeu...
+          Waiting for the game to start...
         </p>
 
         {/* Drinking rules */}
@@ -115,7 +115,7 @@ function TVDisplay() {
                 <span className="text-indigo-400 font-bold">HOST:</span>
                 <span className="text-yellow-300 italic">{getHostPrompt('lobby', false)}</span>
               </div>
-              <div className="text-xs text-gray-500 mt-1">Appuyez sur H pour masquer</div>
+              <div className="text-xs text-gray-500 mt-1">Press H to hide</div>
             </div>
           </div>
         )}
@@ -197,7 +197,7 @@ function TVDisplay() {
                 <span className="text-indigo-400 font-bold">HOST:</span>
                 <span className="text-yellow-300 italic">{getHostPrompt(gameState.phase, true)}</span>
               </div>
-              <div className="text-xs text-gray-500 mt-1">Appuyez sur H pour masquer</div>
+              <div className="text-xs text-gray-500 mt-1">Press H to hide</div>
             </div>
           </div>
         )}
@@ -236,7 +236,7 @@ function TVDisplay() {
       {gameState.phase === 'faceoff' && (
         <div className="text-center mb-4">
           <span className="text-xl text-yellow-400 animate-pulse">
-            FACE-OFF - Buzzez pour repondre en premier!
+            FACE-OFF - Buzz to answer first!
           </span>
           <BuzzerIndicator
             buzzOrder={gameState.buzzOrder}
@@ -260,7 +260,7 @@ function TVDisplay() {
             }}
           >
             {gameState.activeTeam
-              ? `${gameState.teams[gameState.activeTeam].name} peut voler!`
+              ? `${gameState.teams[gameState.activeTeam].name} can steal!`
               : 'STEAL!'}
           </span>
         </div>
@@ -275,7 +275,7 @@ function TVDisplay() {
               color: gameState.teams[gameState.controllingTeam].color,
             }}
           >
-            {gameState.teams[gameState.controllingTeam].name} joue
+            {gameState.teams[gameState.controllingTeam].name} plays
           </span>
         </div>
       )}
@@ -318,7 +318,7 @@ function TVDisplay() {
                 )}
               </span>
             </div>
-            <div className="text-xs text-gray-500 mt-1">Appuyez sur H pour masquer</div>
+            <div className="text-xs text-gray-500 mt-1">Press H to hide</div>
           </div>
         </div>
       )}
