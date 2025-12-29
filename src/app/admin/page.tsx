@@ -67,6 +67,56 @@ function PasswordPrompt({ onSuccess }: { onSuccess: () => void }) {
   )
 }
 
+// Helper: Get phase-specific help text
+function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: string; say: string; next: string } {
+  if (isBuzzerQuestion) {
+    return {
+      action: "Cliquez 'Debloquer' pour ouvrir les buzzers, puis 'Correct' ou 'Faux' apres la reponse",
+      say: "\"Regardez bien la photo... Buzzez quand vous savez!\"",
+      next: "Apres la reponse: Correct (+10 pts) ou Faux (-5 pts, joueur suivant)"
+    }
+  }
+
+  switch (phase) {
+    case 'lobby':
+      return {
+        action: "Attendez que tous les joueurs rejoignent via /buzzer, puis cliquez 'Face-off'",
+        say: "\"Bienvenue a Golden Friends! Scannez le QR code pour rejoindre votre equipe.\"",
+        next: "Quand pret: Cliquez 'Face-off' pour commencer"
+      }
+    case 'faceoff':
+      return {
+        action: "Cliquez 'Debloquer' pour ouvrir les buzzers. Le premier qui buzze gagne le controle.",
+        say: "\"Question! [Lire la question] - Buzzez pour repondre en premier!\"",
+        next: "Apres buzz: Cliquez sur l'equipe gagnante (Filles/Garcons) pour donner le controle"
+      }
+    case 'play':
+      return {
+        action: "L'equipe devine les reponses. Cliquez sur une reponse pour la reveler, ou STRIKE si faux.",
+        say: "\"[Equipe], donnez-moi une reponse!\" Apres reponse: \"Voyons si c'est la...\"",
+        next: "Bonne reponse: Reveler. Mauvaise: STRIKE. Apres 3 strikes: Phase Steal"
+      }
+    case 'steal':
+      return {
+        action: "L'autre equipe a UNE chance de voler tous les points. Pas de strike possible.",
+        say: "\"[Autre equipe], vous pouvez voler! Concertez-vous... Quelle est votre reponse?\"",
+        next: "Bonne reponse: 'Donner pts' a l'equipe qui vole. Mauvaise: 'Donner pts' a l'equipe originale"
+      }
+    case 'reveal':
+      return {
+        action: "Montrez les reponses restantes, puis passez a la question suivante",
+        say: "\"Voyons les autres reponses que vous avez manquees...\"",
+        next: "Cliquez 'Suivante' pour passer a la prochaine question"
+      }
+    default:
+      return {
+        action: "Selectionnez une phase pour commencer",
+        say: "",
+        next: ""
+      }
+  }
+}
+
 function AdminPanel() {
   const {
     gameState,
@@ -95,6 +145,7 @@ function AdminPanel() {
   const [contests, setContests] = useState<ContestInfo[]>([])
   const [showLoadModal, setShowLoadModal] = useState<string | null>(null)
   const [resetScores, setResetScores] = useState(false)
+  const [showHelp, setShowHelp] = useState(true)
 
   const fetchContests = useCallback(async () => {
     try {
@@ -132,6 +183,7 @@ function AdminPanel() {
 
   const currentQuestion = gameState.questions[gameState.currentQuestionIndex]
   const isBuzzerQuestion = currentQuestion?.type === 'buzzer'
+  const phaseHelp = getPhaseHelp(gameState.phase, isBuzzerQuestion)
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
@@ -172,6 +224,39 @@ function AdminPanel() {
             <span className="text-gray-500 text-sm">Chargement...</span>
           )}
         </div>
+      </div>
+
+      {/* Help Panel */}
+      <div className="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-500/30 rounded-xl mb-4">
+        <button
+          onClick={() => setShowHelp(!showHelp)}
+          className="w-full p-3 flex items-center justify-between text-left"
+        >
+          <span className="text-sm font-bold text-indigo-300">
+            Aide - Que faire maintenant?
+          </span>
+          <span className="text-indigo-400">{showHelp ? '▼' : '▶'}</span>
+        </button>
+        {showHelp && (
+          <div className="px-4 pb-4 space-y-3">
+            <div className="flex gap-2">
+              <span className="text-green-400 font-bold text-sm shrink-0">Action:</span>
+              <span className="text-sm text-gray-200">{phaseHelp.action}</span>
+            </div>
+            {phaseHelp.say && (
+              <div className="flex gap-2">
+                <span className="text-yellow-400 font-bold text-sm shrink-0">A dire:</span>
+                <span className="text-sm text-gray-200 italic">{phaseHelp.say}</span>
+              </div>
+            )}
+            {phaseHelp.next && (
+              <div className="flex gap-2">
+                <span className="text-blue-400 font-bold text-sm shrink-0">Ensuite:</span>
+                <span className="text-sm text-gray-200">{phaseHelp.next}</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Load Contest Modal */}
@@ -292,39 +377,51 @@ function AdminPanel() {
           {/* Phase controls */}
           <div className="bg-gray-800 rounded-xl p-4">
             <h3 className="text-lg font-bold mb-3 text-gold-400">Phase</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setPhase('lobby')}
-                className={`py-2 px-3 rounded-lg ${
-                  gameState.phase === 'lobby' ? 'bg-yellow-600' : 'bg-gray-700 hover:bg-gray-600'
-                }`}
-              >
-                Lobby
-              </button>
-              <button
-                onClick={() => setPhase('faceoff')}
-                className={`py-2 px-3 rounded-lg ${
-                  gameState.phase === 'faceoff' ? 'bg-yellow-600' : 'bg-gray-700 hover:bg-gray-600'
-                }`}
-              >
-                Face-off
-              </button>
-              <button
-                onClick={() => setPhase('play')}
-                className={`py-2 px-3 rounded-lg ${
-                  gameState.phase === 'play' ? 'bg-green-600' : 'bg-gray-700 hover:bg-gray-600'
-                }`}
-              >
-                Play
-              </button>
-              <button
-                onClick={() => setPhase('steal')}
-                className={`py-2 px-3 rounded-lg ${
-                  gameState.phase === 'steal' ? 'bg-red-600' : 'bg-gray-700 hover:bg-gray-600'
-                }`}
-              >
-                Steal
-              </button>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setPhase('lobby')}
+                  className={`py-2 px-4 rounded-lg w-28 text-left ${
+                    gameState.phase === 'lobby' ? 'bg-gray-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                  }`}
+                >
+                  1. Lobby
+                </button>
+                <span className="text-xs text-gray-400">Attente des joueurs</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setPhase('faceoff')}
+                  className={`py-2 px-4 rounded-lg w-28 text-left ${
+                    gameState.phase === 'faceoff' ? 'bg-yellow-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                  }`}
+                >
+                  2. Face-off
+                </button>
+                <span className="text-xs text-gray-400">Buzzers ouverts</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setPhase('play')}
+                  className={`py-2 px-4 rounded-lg w-28 text-left ${
+                    gameState.phase === 'play' ? 'bg-green-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                  }`}
+                >
+                  3. Play
+                </button>
+                <span className="text-xs text-gray-400">Equipe devine les reponses</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setPhase('steal')}
+                  className={`py-2 px-4 rounded-lg w-28 text-left ${
+                    gameState.phase === 'steal' ? 'bg-red-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                  }`}
+                >
+                  4. Steal
+                </button>
+                <span className="text-xs text-gray-400">Autre equipe peut voler</span>
+              </div>
             </div>
           </div>
 
