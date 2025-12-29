@@ -37,12 +37,21 @@ function TVDisplay() {
   const [hostMode, setHostMode] = useState(false)
   const [serverUrl, setServerUrl] = useState('')
 
-  // Get server URL for QR code
+  // Fetch local IP from server for QR code
   useEffect(() => {
-    const protocol = window.location.protocol
-    const host = window.location.hostname
-    const port = window.location.port || '3000'
-    setServerUrl(`${protocol}//${host}:${port}`)
+    fetch('/api/server-info')
+      .then(res => res.json())
+      .then(data => {
+        const protocol = window.location.protocol
+        setServerUrl(`${protocol}//${data.ip}:${data.port}`)
+      })
+      .catch(() => {
+        // Fallback to current hostname if fetch fails
+        const protocol = window.location.protocol
+        const host = window.location.hostname
+        const port = window.location.port || '3000'
+        setServerUrl(`${protocol}//${host}:${port}`)
+      })
   }, [])
 
   // Toggle host mode with 'H' key

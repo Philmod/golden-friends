@@ -4,6 +4,21 @@ import next from 'next'
 import { parse } from 'url'
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
+
+// Get local network IP address
+function getLocalIP(): string {
+  const interfaces = os.networkInterfaces()
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name] || []) {
+      // Skip internal and non-IPv4 addresses
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address
+      }
+    }
+  }
+  return 'localhost'
+}
 import type {
   GameState,
   Player,
@@ -27,6 +42,10 @@ function loadQuestionsFromFile(contestId: string): Question[] {
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = '0.0.0.0'
 const port = parseInt(process.env.PORT || '3000', 10)
+const localIP = getLocalIP()
+
+// Make local IP available to Next.js API routes
+process.env.LOCAL_IP = localIP
 
 const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
@@ -529,8 +548,9 @@ app.prepare().then(() => {
 
   httpServer.listen(port, hostname, () => {
     console.log(`> Golden Friends server ready on http://${hostname}:${port}`)
-    console.log(`> TV: http://localhost:${port}/tv`)
-    console.log(`> Admin: http://localhost:${port}/admin`)
-    console.log(`> Buzzer: http://localhost:${port}/buzzer`)
+    console.log(`> Local network: http://${localIP}:${port}`)
+    console.log(`> TV: http://${localIP}:${port}/tv`)
+    console.log(`> Admin: http://${localIP}:${port}/admin`)
+    console.log(`> Buzzer: http://${localIP}:${port}/buzzer`)
   })
 })
