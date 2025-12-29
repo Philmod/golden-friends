@@ -5,50 +5,77 @@ import { Answer } from '@/types/game'
 interface AnswerCardProps {
   answer: Answer
   index: number
+  isStolen?: boolean
 }
 
-export default function AnswerCard({ answer, index }: AnswerCardProps) {
+export default function AnswerCard({ answer, index, isStolen }: AnswerCardProps) {
   return (
-    <div className="flip-card h-16 md:h-20">
-      <div className={`flip-card-inner relative w-full h-full ${answer.revealed ? 'flipped' : ''}`}>
-        {/* Front - Hidden answer */}
-        <div className="flip-card-front absolute w-full h-full">
-          <div className="w-full h-full bg-blue-900 border-4 border-gold-400 rounded-lg flex items-center justify-center">
-            <span className="text-4xl md:text-5xl font-bold text-gold-400">{index + 1}</span>
-          </div>
-        </div>
+    <div className={`relative h-12 md:h-14 ${isStolen ? 'mt-2' : ''}`}>
+      {/* Answer bar container */}
+      <div
+        className={`
+          w-full h-full rounded-full overflow-hidden
+          transition-all duration-500 ease-out
+          ${answer.revealed ? 'answer-bar-gradient' : 'answer-bar-hidden'}
+        `}
+      >
+        <div className="w-full h-full flex items-center justify-between px-6 md:px-8">
+          {/* Answer text */}
+          <span
+            className={`
+              text-lg md:text-xl font-bold uppercase tracking-wide
+              transition-opacity duration-300
+              ${answer.revealed ? 'text-white' : 'text-transparent'}
+            `}
+            style={{
+              textShadow: answer.revealed ? '1px 1px 2px rgba(0,0,0,0.5)' : 'none'
+            }}
+          >
+            {answer.text}
+          </span>
 
-        {/* Back - Revealed answer */}
-        <div className="flip-card-back absolute w-full h-full">
-          <div className="w-full h-full gold-gradient border-4 border-gold-600 rounded-lg flex items-center justify-between px-4 md:px-6">
-            <span className="text-lg md:text-2xl font-bold text-gray-900 uppercase tracking-wide truncate flex-1">
-              {answer.text}
-            </span>
-            <span className="text-2xl md:text-3xl font-bold text-blue-900 ml-4 points-reveal">
-              {answer.points}
-            </span>
-          </div>
+          {/* Points */}
+          <span
+            className={`
+              text-xl md:text-2xl font-bold min-w-[3rem] text-right
+              transition-all duration-300
+              ${answer.revealed
+                ? 'text-white opacity-100 scale-100'
+                : 'text-transparent opacity-0 scale-50'
+              }
+            `}
+            style={{
+              textShadow: answer.revealed ? '1px 1px 2px rgba(0,0,0,0.5)' : 'none'
+            }}
+          >
+            {answer.points}
+          </span>
         </div>
       </div>
 
+      {/* Reveal animation overlay */}
+      {answer.revealed && (
+        <div
+          className="absolute inset-0 rounded-full pointer-events-none animate-reveal-flash"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+          }}
+        />
+      )}
+
       <style jsx>{`
-        .flip-card {
-          perspective: 1000px;
+        @keyframes reveal-flash {
+          0% {
+            transform: translateX(-100%);
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
         }
-        .flip-card-inner {
-          transition: transform 0.6s;
-          transform-style: preserve-3d;
-        }
-        .flip-card-inner.flipped {
-          transform: rotateX(180deg);
-        }
-        .flip-card-front,
-        .flip-card-back {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-        }
-        .flip-card-back {
-          transform: rotateX(180deg);
+        .animate-reveal-flash {
+          animation: reveal-flash 0.6s ease-out forwards;
         }
       `}</style>
     </div>

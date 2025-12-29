@@ -19,6 +19,7 @@ interface GameContextValue {
   myPlayerId: string | null
   myTeam: TeamId | null
   myBuzzerPosition: number | null
+  currentContestId: string | null
 
   // Player actions
   joinGame: (name: string, team: TeamId) => void
@@ -43,6 +44,8 @@ interface GameContextValue {
   awardPoints: (team: TeamId) => void
   resetRound: () => void
   markCorrect: (isCorrect: boolean) => void
+  loadContest: (contestId: string, resetScores: boolean) => void
+  getCurrentContest: () => void
 
   // Subscriptions
   subscribeTV: () => void
@@ -58,6 +61,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [myPlayerId, setMyPlayerId] = useState<string | null>(null)
   const [myTeam, setMyTeam] = useState<TeamId | null>(null)
   const [myBuzzerPosition, setMyBuzzerPosition] = useState<number | null>(null)
+  const [currentContestId, setCurrentContestId] = useState<string | null>(null)
 
   // Sound playing
   const playSound = useCallback((soundId: SoundType) => {
@@ -103,6 +107,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
       playSound(soundId)
     })
 
+    socket.on('admin:contestLoaded', (data) => {
+      if (data.success && data.contestId) {
+        setCurrentContestId(data.contestId)
+        console.log(`Contest loaded: ${data.contestId} (${data.questionCount} questions)`)
+      } else {
+        console.error('Failed to load contest:', data.error)
+      }
+    })
+
+    socket.on('admin:currentContest', (data) => {
+      setCurrentContestId(data.contestId)
+    })
+
     return () => {
       socket.off('connect')
       socket.off('disconnect')
@@ -112,6 +129,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       socket.off('buzzer:accepted')
       socket.off('buzzer:rejected')
       socket.off('sound:play')
+      socket.off('admin:contestLoaded')
+      socket.off('admin:currentContest')
     }
   }, [playSound])
 
@@ -237,6 +256,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
     socket.emit('admin:correctAnswer', isCorrect)
   }, [])
 
+  const loadContest = useCallback((contestId: string, resetScores: boolean) => {
+    const socket = getSocket()
+    socket.emit('admin:loadContest', { contestId, resetScores })
+    setMyBuzzerPosition(null)
+  }, [])
+
+  const getCurrentContest = useCallback(() => {
+    const socket = getSocket()
+    socket.emit('admin:getCurrentContest')
+  }, [])
+
   // Subscriptions
   const subscribeTV = useCallback(() => {
     const socket = getSocket()
@@ -255,6 +285,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     myPlayerId,
     myTeam,
     myBuzzerPosition,
+    currentContestId,
     joinGame,
     leaveGame,
     pressBuzzer,
@@ -275,6 +306,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     awardPoints,
     resetRound,
     markCorrect,
+    loadContest,
+    getCurrentContest,
     subscribeTV,
     subscribeAdmin,
   }

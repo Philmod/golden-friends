@@ -102,6 +102,8 @@ export interface ServerToClientEvents {
   'buzzer:rejected': (data: { reason: string }) => void;
   'player:list': (players: Player[]) => void;
   'sound:play': (soundId: SoundType) => void;
+  'admin:contestLoaded': (data: { success: boolean; contestId?: string; questionCount?: number; error?: string }) => void;
+  'admin:currentContest': (data: { contestId: string }) => void;
 }
 
 export interface ClientToServerEvents {
@@ -128,6 +130,8 @@ export interface ClientToServerEvents {
   'admin:awardPoints': (team: TeamId) => void;
   'admin:resetRound': () => void;
   'admin:correctAnswer': (isCorrect: boolean) => void;
+  'admin:loadContest': (data: { contestId: string; resetScores: boolean }) => void;
+  'admin:getCurrentContest': () => void;
 
   // Subscriptions
   'subscribe:tv': () => void;

@@ -2,6 +2,8 @@ import { createServer } from 'http'
 import { Server, Socket } from 'socket.io'
 import next from 'next'
 import { parse } from 'url'
+import fs from 'fs'
+import path from 'path'
 import type {
   GameState,
   Player,
@@ -14,7 +16,13 @@ import type {
   SoundType,
 } from '../src/types/game'
 import { createInitialGameState } from '../src/types/game'
-import questionsData from '../src/data/questions.json'
+
+// Helper to load questions from contest file
+function loadQuestionsFromFile(contestId: string): Question[] {
+  const filePath = path.join(process.cwd(), 'src/data/contests', `${contestId}.json`)
+  const content = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+  return content.questions as Question[]
+}
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = '0.0.0.0'
@@ -24,7 +32,8 @@ const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
 
 // Game state
-let gameState: GameState = createInitialGameState(questionsData.questions as Question[])
+let currentContestId = 'default'
+let gameState: GameState = createInitialGameState(loadQuestionsFromFile(currentContestId))
 let players: Map<string, Player> = new Map()
 
 // Helper functions
@@ -89,6 +98,17 @@ app.prepare().then(() => {
 
     // Player joins
     socket.on('player:join', ({ name, team }) => {
+      // Remove any existing player with same name on same team (handles refresh/reconnect)
+      const existingPlayer = Array.from(players.values()).find(
+        p => p.name === name && p.team === team
+      )
+      if (existingPlayer) {
+        players.delete(existingPlayer.id)
+        gameState.teams[team].players = gameState.teams[team].players.filter(
+          p => p.id !== existingPlayer.id
+        )
+      }
+
       const player: Player = {
         id: socket.id,
         name,
@@ -379,6 +399,53 @@ app.prepare().then(() => {
         }
       }
       broadcastState(io)
+    })
+
+    // Admin: Load contest
+    socket.on('admin:loadContest', ({ contestId, resetScores }: { contestId: string; resetScores: boolean }) => {
+      try {
+        const questions = loadQuestionsFromFile(contestId)
+
+        // Save current scores if not resetting
+        const girlsScore = resetScores ? 0 : gameState.teams.girls.score
+        const boysScore = resetScores ? 0 : gameState.teams.boys.score
+
+        // Create new game state with new questions
+        gameState = createInitialGameState(questions)
+        currentContestId = contestId
+
+        // Restore scores if not resetting
+        gameState.teams.girls.score = girlsScore
+        gameState.teams.boys.score = boysScore
+
+        // Re-add existing players to teams
+        players.forEach((player) => {
+          gameState.teams[player.team].players.push(player)
+        })
+
+        // Broadcast new state to all clients
+        broadcastState(io)
+
+        // Notify admin of success
+        socket.emit('admin:contestLoaded', {
+          success: true,
+          contestId,
+          questionCount: questions.length,
+        })
+
+        console.log(`Loaded contest: ${contestId} with ${questions.length} questions`)
+      } catch (error) {
+        console.error('Failed to load contest:', error)
+        socket.emit('admin:contestLoaded', {
+          success: false,
+          error: 'Failed to load contest',
+        })
+      }
+    })
+
+    // Admin: Get current contest
+    socket.on('admin:getCurrentContest', () => {
+      socket.emit('admin:currentContest', { contestId: currentContestId })
     })
 
     // Handle disconnect

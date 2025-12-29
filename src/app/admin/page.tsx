@@ -1,7 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { GameProvider, useGame } from '@/context/GameContext'
+
+interface ContestInfo {
+  id: string
+  name: string
+  description?: string
+  questionCount: number
+}
 
 function PasswordPrompt({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState('')
@@ -65,6 +72,7 @@ function AdminPanel() {
     gameState,
     players,
     isConnected,
+    currentContestId,
     subscribeAdmin,
     nextQuestion,
     prevQuestion,
@@ -80,11 +88,37 @@ function AdminPanel() {
     awardPoints,
     resetRound,
     markCorrect,
+    loadContest,
+    getCurrentContest,
   } = useGame()
+
+  const [contests, setContests] = useState<ContestInfo[]>([])
+  const [showLoadModal, setShowLoadModal] = useState<string | null>(null)
+  const [resetScores, setResetScores] = useState(false)
+
+  const fetchContests = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/contests')
+      if (res.ok) {
+        const data = await res.json()
+        setContests(data.contests)
+      }
+    } catch (err) {
+      console.error('Failed to fetch contests:', err)
+    }
+  }, [])
 
   useEffect(() => {
     subscribeAdmin()
-  }, [subscribeAdmin])
+    getCurrentContest()
+    fetchContests()
+  }, [subscribeAdmin, getCurrentContest, fetchContests])
+
+  const handleLoadContest = (contestId: string) => {
+    loadContest(contestId, resetScores)
+    setShowLoadModal(null)
+    setResetScores(false)
+  }
 
   if (!gameState) {
     return (
@@ -102,7 +136,7 @@ function AdminPanel() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold text-gold-400">Admin Panel</h1>
         <div className="flex items-center gap-4">
           <span className={`px-3 py-1 rounded-full text-sm ${
@@ -115,6 +149,68 @@ function AdminPanel() {
           </span>
         </div>
       </div>
+
+      {/* Contest Selector */}
+      <div className="bg-gray-800 rounded-xl p-3 mb-4">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="text-sm text-gray-400">Concours:</span>
+          {contests.map((contest) => (
+            <button
+              key={contest.id}
+              onClick={() => setShowLoadModal(contest.id)}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                currentContestId === contest.id
+                  ? 'bg-gold-400 text-gray-900 font-bold'
+                  : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+            >
+              {contest.name}
+              <span className="ml-1 text-xs opacity-70">({contest.questionCount})</span>
+            </button>
+          ))}
+          {contests.length === 0 && (
+            <span className="text-gray-500 text-sm">Chargement...</span>
+          )}
+        </div>
+      </div>
+
+      {/* Load Contest Modal */}
+      {showLoadModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 className="text-xl font-bold text-gold-400 mb-4">Charger un concours</h3>
+            <p className="text-gray-300 mb-4">
+              Voulez-vous charger le concours &quot;{contests.find(c => c.id === showLoadModal)?.name}&quot;?
+            </p>
+            <label className="flex items-center gap-3 mb-6 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={resetScores}
+                onChange={(e) => setResetScores(e.target.checked)}
+                className="w-5 h-5 rounded border-gray-600 bg-gray-700 text-gold-400 focus:ring-gold-400"
+              />
+              <span className="text-gray-300">Reinitialiser les scores</span>
+            </label>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowLoadModal(null)
+                  setResetScores(false)
+                }}
+                className="flex-1 bg-gray-700 hover:bg-gray-600 py-2 rounded-lg"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => handleLoadContest(showLoadModal)}
+                className="flex-1 bg-gold-400 text-gray-900 font-bold py-2 rounded-lg hover:bg-gold-300"
+              >
+                Charger
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column: Questions */}

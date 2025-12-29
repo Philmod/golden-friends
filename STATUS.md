@@ -40,6 +40,7 @@
 - Support for photo questions (displays WhatsApp images)
 
 #### Admin Panel (`/admin`)
+- **Contest selector** to load different question sets
 - Question navigator (list all questions, prev/next)
 - Phase controls (lobby, faceoff, play, steal)
 - Team selection and strike management
@@ -48,6 +49,7 @@
 - Buzzer monitor (see order, lock/unlock, reset)
 - Player list with connection status
 - Correct/Wrong buttons for buzzer questions
+- Password protected (default: `golden2025`)
 
 #### Buzzer Page (`/buzzer`)
 - Team selector (name input + Girls/Boys choice)
@@ -58,7 +60,8 @@
 - Persistent player data (localStorage)
 
 ### 4. Game Content
-- **Questions** (`src/data/questions.json`): 12 rounds including:
+- **Questions** stored in `src/data/contests/` folder (supports multiple contest files)
+- **Default contest** (`default.json`): 12 rounds including:
   - 2 classic rounds (1x points)
   - 5 photo buzzer rounds (using WhatsApp images)
   - 2 classic rounds (2x points)
@@ -66,6 +69,7 @@
   - 1 Fast Money finale
 
 - **Personalized question**: "Qui envoie le plus de messages dans le groupe WhatsApp?" with real data from chat analysis
+- **Adding new contests**: Create a JSON file in `src/data/contests/` with `name`, `description`, `questions` array
 
 ### 5. Visual Design
 - Dark gradient background
@@ -74,6 +78,17 @@
 - Blue (#4169E1) for Boys team
 - Custom animations (flip, shake, pulse, pop)
 - Oswald font family
+
+### 6. French TV Style UI (Une Famille en Or)
+- **TV Display** redesigned to match authentic French game show:
+  - Dotted blue background pattern (matching TV broadcast style)
+  - XXX | Score | XXX header layout with red strike X marks
+  - Single-column answer board (instead of 2-column grid)
+  - Pink/purple gradient answer bars with rounded pill shape
+  - White uppercase text with shadow effects
+  - Points displayed on the right side of each bar
+  - Smooth reveal animations with light flash effect
+  - Team scores shown in smaller circles below main score
 
 ---
 
@@ -103,15 +118,35 @@
    - [x] Password stored in `.env.local` (default: `golden2025`)
    - [x] Session persists via sessionStorage
 
+5. **Contest Loader** ✅
+   - [x] Questions now stored in `src/data/contests/` folder
+   - [x] Admin panel shows contest selector at top
+   - [x] Click to load different question sets during party
+   - [x] Option to reset scores when loading new contest
+   - [x] API route `/api/admin/contests` lists available contests
+
+6. **Bug Fix: Duplicate Players on Refresh** ✅
+   - [x] Fixed team counter incrementing incorrectly on page refresh/new tab
+   - [x] Server now deduplicates players by name+team when rejoining
+   - [x] Prevents stale disconnected player entries from inflating counts
+
+7. **French TV Style UI (Une Famille en Or)** ✅
+   - [x] Redesigned TV display to match authentic French game show
+   - [x] Added dotted blue background pattern
+   - [x] Created XXX | Score | XXX header with red strike markers
+   - [x] Changed to single-column answer layout
+   - [x] Implemented pink/purple gradient answer bars (pill-shaped)
+   - [x] Added reveal flash animation effect
+
 ### Immediate (Before Party)
 
-5. **Customize Questions**
+8. **Customize Questions**
    - [ ] Review and personalize the multiple-answer questions
    - [ ] Select better photos from WhatsApp for photo rounds
    - [ ] Create questions specific to your friend group
    - [ ] Consider adding questions about specific people (Nico, Cabiai, etc.)
 
-6. **Test Full Game Flow**
+9. **Test Full Game Flow**
    - [ ] Run through a complete game with 2+ players
    - [ ] Verify scoring works correctly with multipliers
    - [ ] Test steal mechanism
@@ -119,22 +154,22 @@
 
 ### Nice to Have (If Time Permits)
 
-7. **Fast Money Implementation**
-   - [ ] Build Fast Money UI (timer, 5 questions)
-   - [ ] Implement player 1 / player 2 flow
-   - [ ] Add duplicate answer detection
-   - Current: Fast Money round exists but UI not fully implemented
+10. **Fast Money Implementation**
+    - [ ] Build Fast Money UI (timer, 5 questions)
+    - [ ] Implement player 1 / player 2 flow
+    - [ ] Add duplicate answer detection
+    - Current: Fast Money round exists but UI not fully implemented
 
-8. **Visual Polish**
-   - [ ] Add confetti on big point wins
-   - [ ] Add team celebration animations
-   - [ ] Improve mobile responsiveness
-   - [ ] Add loading states
+11. **Visual Polish**
+    - [ ] Add confetti on big point wins
+    - [ ] Add team celebration animations
+    - [ ] Improve mobile responsiveness
+    - [ ] Add loading states
 
-9. **Game Features**
-   - [ ] Drinking rules display on TV
-   - [ ] Timer for buzzer questions
-   - [ ] History/undo for admin actions
+12. **Game Features**
+    - [ ] Drinking rules display on TV
+    - [ ] Timer for buzzer questions
+    - [ ] History/undo for admin actions
 
 ---
 
@@ -165,7 +200,10 @@ golden-friends/
 │   │   ├── page.tsx          # Landing page
 │   │   ├── tv/page.tsx       # TV display
 │   │   ├── admin/page.tsx    # Admin panel
-│   │   └── buzzer/page.tsx   # Player buzzer
+│   │   ├── buzzer/page.tsx   # Player buzzer
+│   │   └── api/admin/
+│   │       ├── verify/route.ts   # Password verification
+│   │       └── contests/route.ts # List available contests
 │   ├── components/
 │   │   └── tv/
 │   │       ├── AnswerBoard.tsx
@@ -180,7 +218,8 @@ golden-friends/
 │   ├── lib/
 │   │   └── socket.ts         # Socket.IO client
 │   └── data/
-│       └── questions.json    # Game questions
+│       └── contests/         # Question sets (JSON files)
+│           └── default.json  # Default contest
 ├── public/
 │   └── sounds/               # Sound effects (buzzer, correct, wrong, reveal, strike, applause)
 ├── data/
@@ -205,4 +244,4 @@ golden-friends/
 
 ---
 
-*Last updated: December 28, 2025*
+*Last updated: December 29, 2025*
