@@ -140,6 +140,9 @@ function AdminPanel() {
     markCorrect,
     loadContest,
     getCurrentContest,
+    startTimer,
+    stopTimer,
+    toggleDrinkingRules,
   } = useGame()
 
   const [contests, setContests] = useState<ContestInfo[]>([])
@@ -191,6 +194,16 @@ function AdminPanel() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold text-gold-400">Admin Panel</h1>
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => toggleDrinkingRules(!gameState.showDrinkingRules)}
+            className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
+              gameState.showDrinkingRules ? 'bg-yellow-600' : 'bg-gray-700'
+            }`}
+            title="Afficher/masquer les regles de boisson sur TV"
+          >
+            <span>🍺</span>
+            <span>{gameState.showDrinkingRules ? 'ON' : 'OFF'}</span>
+          </button>
           <span className={`px-3 py-1 rounded-full text-sm ${
             isConnected ? 'bg-green-600' : 'bg-red-600'
           }`}>
@@ -497,6 +510,44 @@ function AdminPanel() {
                 {gameState.isLocked ? 'Debloquer' : 'Bloquer'}
               </button>
             </div>
+
+            {/* Timer controls for buzzer questions */}
+            {isBuzzerQuestion && (
+              <div className="mb-3 p-2 bg-gray-700/50 rounded-lg">
+                <div className="text-sm text-gray-400 mb-2">Timer</div>
+                <div className="flex gap-2">
+                  {!gameState.timerRunning ? (
+                    <>
+                      <button
+                        onClick={() => startTimer(10)}
+                        className="flex-1 bg-yellow-600 hover:bg-yellow-500 py-2 rounded-lg text-sm font-bold"
+                      >
+                        10s
+                      </button>
+                      <button
+                        onClick={() => startTimer(15)}
+                        className="flex-1 bg-yellow-600 hover:bg-yellow-500 py-2 rounded-lg text-sm font-bold"
+                      >
+                        15s
+                      </button>
+                      <button
+                        onClick={() => startTimer(20)}
+                        className="flex-1 bg-yellow-600 hover:bg-yellow-500 py-2 rounded-lg text-sm font-bold"
+                      >
+                        20s
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={stopTimer}
+                      className="flex-1 bg-red-600 hover:bg-red-500 py-2 rounded-lg text-sm font-bold"
+                    >
+                      Stop Timer
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Buzz order */}
             {gameState.buzzOrder.length > 0 && (

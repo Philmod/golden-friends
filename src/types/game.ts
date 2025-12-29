@@ -92,6 +92,15 @@ export interface GameState {
   showWrongX: boolean;
   roundPoints: number;            // Points at stake this round
   fastMoney?: FastMoneyState;
+  // Timer state
+  timerRunning: boolean;
+  timerEndTime: number | null;    // Unix timestamp when timer ends
+  timerDuration: number;          // Timer duration in seconds
+  // Confetti trigger
+  showConfetti: TeamId | null;    // Which team to show confetti for
+  // Drinking rules
+  showDrinkingRules: boolean;     // Whether to display drinking rules on TV
+  highlightDrinkingRule: string | null;  // Rule ID to highlight temporarily
 }
 
 // Socket event types
@@ -132,6 +141,9 @@ export interface ClientToServerEvents {
   'admin:correctAnswer': (isCorrect: boolean) => void;
   'admin:loadContest': (data: { contestId: string; resetScores: boolean }) => void;
   'admin:getCurrentContest': () => void;
+  'admin:startTimer': (duration: number) => void;
+  'admin:stopTimer': () => void;
+  'admin:toggleDrinkingRules': (show: boolean) => void;
 
   // Subscriptions
   'subscribe:tv': () => void;
@@ -181,5 +193,11 @@ export function createInitialGameState(questions: Question[]): GameState {
     isLocked: true,
     showWrongX: false,
     roundPoints: 0,
+    timerRunning: false,
+    timerEndTime: null,
+    timerDuration: 10,
+    showConfetti: null,
+    showDrinkingRules: true,
+    highlightDrinkingRule: null,
   };
 }

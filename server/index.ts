@@ -236,6 +236,15 @@ app.prepare().then(() => {
           const multiplier = question.pointMultiplier || 1
           gameState.roundPoints += answer.points * multiplier
 
+          // Highlight drinking rule if this is the #1 answer (first in list)
+          if (answerId === 0 || (question.answers[0] && question.answers[0].id === answerId)) {
+            gameState.highlightDrinkingRule = 'top-answer'
+            setTimeout(() => {
+              gameState.highlightDrinkingRule = null
+              broadcastState(io)
+            }, 3000)
+          }
+
           broadcastSound(io, 'reveal')
           broadcastState(io)
         }
@@ -345,12 +354,14 @@ app.prepare().then(() => {
       if (gameState.controllingTeam) {
         gameState.teams[gameState.controllingTeam].strikes++
         gameState.showWrongX = true
+        gameState.highlightDrinkingRule = 'strike'
         broadcastSound(io, 'strike')
         broadcastState(io)
 
-        // Auto-hide X
+        // Auto-hide X and drinking rule highlight
         setTimeout(() => {
           gameState.showWrongX = false
+          gameState.highlightDrinkingRule = null
           broadcastState(io)
         }, 2000)
 
@@ -366,7 +377,21 @@ app.prepare().then(() => {
     // Admin: Award points to team
     socket.on('admin:awardPoints', (team: TeamId) => {
       gameState.teams[team].score += gameState.roundPoints
-      broadcastSound(io, 'correct')
+
+      // Show confetti for big wins (20+ points)
+      if (gameState.roundPoints >= 20) {
+        gameState.showConfetti = team
+        broadcastSound(io, 'applause')
+
+        // Clear confetti after 4 seconds
+        setTimeout(() => {
+          gameState.showConfetti = null
+          broadcastState(io)
+        }, 4000)
+      } else {
+        broadcastSound(io, 'correct')
+      }
+
       broadcastState(io)
     })
 
@@ -387,7 +412,18 @@ app.prepare().then(() => {
         if (gameState.buzzOrder.length > 0) {
           const winner = gameState.buzzOrder[0]
           gameState.teams[winner.team].score += 10 // +10 for photo questions
+          gameState.showConfetti = winner.team
           broadcastSound(io, 'correct')
+
+          // Stop timer if running
+          gameState.timerRunning = false
+          gameState.timerEndTime = null
+
+          // Clear confetti after 3 seconds
+          setTimeout(() => {
+            gameState.showConfetti = null
+            broadcastState(io)
+          }, 3000)
         }
       } else {
         // Wrong answer: -5 points, let next person try
@@ -398,6 +434,37 @@ app.prepare().then(() => {
           broadcastSound(io, 'wrong')
         }
       }
+      broadcastState(io)
+    })
+
+    // Admin: Start timer
+    socket.on('admin:startTimer', (duration: number) => {
+      gameState.timerDuration = duration
+      gameState.timerEndTime = Date.now() + (duration * 1000)
+      gameState.timerRunning = true
+      broadcastState(io)
+
+      // Auto-stop timer when it ends
+      setTimeout(() => {
+        if (gameState.timerRunning && gameState.timerEndTime && Date.now() >= gameState.timerEndTime) {
+          gameState.timerRunning = false
+          gameState.timerEndTime = null
+          broadcastSound(io, 'timer')
+          broadcastState(io)
+        }
+      }, duration * 1000)
+    })
+
+    // Admin: Stop timer
+    socket.on('admin:stopTimer', () => {
+      gameState.timerRunning = false
+      gameState.timerEndTime = null
+      broadcastState(io)
+    })
+
+    // Admin: Toggle drinking rules
+    socket.on('admin:toggleDrinkingRules', (show: boolean) => {
+      gameState.showDrinkingRules = show
       broadcastState(io)
     })
 

@@ -1,14 +1,50 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { GameProvider, useGame } from '@/context/GameContext'
 import AnswerBoard from '@/components/tv/AnswerBoard'
 import ScoreBoard from '@/components/tv/ScoreBoard'
 import BuzzerIndicator from '@/components/tv/BuzzerIndicator'
 import WrongX from '@/components/tv/WrongX'
+import Timer from '@/components/tv/Timer'
+import Confetti from '@/components/tv/Confetti'
+import DrinkingRules from '@/components/tv/DrinkingRules'
+
+// Host prompts for each phase
+function getHostPrompt(phase: string, isBuzzerQuestion: boolean, teamName?: string): string {
+  if (isBuzzerQuestion) {
+    return "\"Regardez bien cette photo... Buzzez quand vous connaissez la reponse!\""
+  }
+  switch (phase) {
+    case 'lobby':
+      return "\"Bienvenue a Golden Friends! Rejoignez votre equipe en scannant le QR code.\""
+    case 'faceoff':
+      return "\"[Lire la question] Premier a buzzer gagne le controle!\""
+    case 'play':
+      return `\"${teamName || 'Equipe'}, donnez-moi une reponse!\"`
+    case 'steal':
+      return `\"${teamName || 'Autre equipe'}, vous pouvez voler! Concertez-vous...\"`
+    case 'reveal':
+      return "\"Voyons les reponses que vous avez manquees...\""
+    default:
+      return ""
+  }
+}
 
 function TVDisplay() {
   const { gameState, subscribeTV, isConnected } = useGame()
+  const [hostMode, setHostMode] = useState(false)
+
+  // Toggle host mode with 'H' key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'h' || e.key === 'H') {
+        setHostMode(prev => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   useEffect(() => {
     subscribeTV()
@@ -64,6 +100,25 @@ function TVDisplay() {
         <p className="text-xl text-gray-500 mt-12">
           En attente du debut du jeu...
         </p>
+
+        {/* Drinking rules */}
+        <DrinkingRules
+          show={gameState.showDrinkingRules}
+          highlightRule={gameState.highlightDrinkingRule || undefined}
+        />
+
+        {/* Host mode indicator */}
+        {hostMode && (
+          <div className="fixed bottom-0 left-0 right-0 bg-black/80 border-t border-indigo-500 p-3">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-indigo-400 font-bold">HOST:</span>
+                <span className="text-yellow-300 italic">{getHostPrompt('lobby', false)}</span>
+              </div>
+              <div className="text-xs text-gray-500 mt-1">Appuyez sur H pour masquer</div>
+            </div>
+          </div>
+        )}
       </main>
     )
   }
@@ -114,6 +169,38 @@ function TVDisplay() {
         </div>
 
         <WrongX show={gameState.showWrongX} />
+
+        {/* Timer */}
+        <Timer
+          endTime={gameState.timerEndTime}
+          isRunning={gameState.timerRunning}
+          duration={gameState.timerDuration}
+        />
+
+        {/* Confetti */}
+        <Confetti
+          teamColor={gameState.showConfetti ? gameState.teams[gameState.showConfetti].color : '#FFD700'}
+          show={!!gameState.showConfetti}
+        />
+
+        {/* Drinking rules */}
+        <DrinkingRules
+          show={gameState.showDrinkingRules}
+          highlightRule={gameState.highlightDrinkingRule || undefined}
+        />
+
+        {/* Host mode indicator */}
+        {hostMode && (
+          <div className="fixed bottom-0 left-0 right-0 bg-black/80 border-t border-indigo-500 p-3">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-indigo-400 font-bold">HOST:</span>
+                <span className="text-yellow-300 italic">{getHostPrompt(gameState.phase, true)}</span>
+              </div>
+              <div className="text-xs text-gray-500 mt-1">Appuyez sur H pour masquer</div>
+            </div>
+          </div>
+        )}
       </main>
     )
   }
@@ -200,6 +287,41 @@ function TVDisplay() {
 
       {/* Wrong X overlay */}
       <WrongX show={gameState.showWrongX} />
+
+      {/* Confetti */}
+      <Confetti
+        teamColor={gameState.showConfetti ? gameState.teams[gameState.showConfetti].color : '#FFD700'}
+        show={!!gameState.showConfetti}
+      />
+
+      {/* Drinking rules */}
+      <DrinkingRules
+        show={gameState.showDrinkingRules}
+        highlightRule={gameState.highlightDrinkingRule || undefined}
+      />
+
+      {/* Host mode indicator */}
+      {hostMode && (
+        <div className="fixed bottom-0 left-0 right-0 bg-black/80 border-t border-indigo-500 p-3">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-indigo-400 font-bold">HOST:</span>
+              <span className="text-yellow-300 italic">
+                {getHostPrompt(
+                  gameState.phase,
+                  false,
+                  gameState.phase === 'play' && gameState.controllingTeam
+                    ? gameState.teams[gameState.controllingTeam].name
+                    : gameState.phase === 'steal' && gameState.activeTeam
+                    ? gameState.teams[gameState.activeTeam].name
+                    : undefined
+                )}
+              </span>
+            </div>
+            <div className="text-xs text-gray-500 mt-1">Appuyez sur H pour masquer</div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

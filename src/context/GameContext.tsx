@@ -46,6 +46,9 @@ interface GameContextValue {
   markCorrect: (isCorrect: boolean) => void
   loadContest: (contestId: string, resetScores: boolean) => void
   getCurrentContest: () => void
+  startTimer: (duration: number) => void
+  stopTimer: () => void
+  toggleDrinkingRules: (show: boolean) => void
 
   // Subscriptions
   subscribeTV: () => void
@@ -267,6 +270,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
     socket.emit('admin:getCurrentContest')
   }, [])
 
+  const startTimer = useCallback((duration: number) => {
+    const socket = getSocket()
+    socket.emit('admin:startTimer', duration)
+  }, [])
+
+  const stopTimer = useCallback(() => {
+    const socket = getSocket()
+    socket.emit('admin:stopTimer')
+  }, [])
+
+  const toggleDrinkingRules = useCallback((show: boolean) => {
+    const socket = getSocket()
+    socket.emit('admin:toggleDrinkingRules', show)
+  }, [])
+
   // Subscriptions
   const subscribeTV = useCallback(() => {
     const socket = getSocket()
@@ -308,6 +326,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
     markCorrect,
     loadContest,
     getCurrentContest,
+    startTimer,
+    stopTimer,
+    toggleDrinkingRules,
     subscribeTV,
     subscribeAdmin,
   }
