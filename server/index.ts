@@ -484,7 +484,8 @@ app.prepare().then(() => {
         // Award points to the team of the first buzzer
         if (gameState.buzzOrder.length > 0) {
           const winner = gameState.buzzOrder[0]
-          gameState.teams[winner.team].score += 10 // +10 for photo questions
+          const multiplier = question.pointMultiplier || 1
+          gameState.teams[winner.team].score += 30 * multiplier // +30 for buzzer questions
           gameState.showConfetti = winner.team
           broadcastSound(io, 'correct')
 
@@ -499,10 +500,11 @@ app.prepare().then(() => {
           }, 3000)
         }
       } else {
-        // Wrong answer: -5 points, let next person try
+        // Wrong answer: -10 points, let next person try
         if (gameState.buzzOrder.length > 0) {
           const wrong = gameState.buzzOrder[0]
-          gameState.teams[wrong.team].score -= 5
+          const multiplier = question.pointMultiplier || 1
+          gameState.teams[wrong.team].score -= 10 * multiplier
           gameState.buzzOrder.shift() // Remove first person
           broadcastSound(io, 'wrong')
         }

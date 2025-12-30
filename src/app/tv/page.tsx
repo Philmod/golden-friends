@@ -81,12 +81,80 @@ function TVDisplay() {
 
   const currentQuestion = gameState.questions[gameState.currentQuestionIndex]
 
+  // Game complete phase - show winner
+  if (gameState.phase === 'complete') {
+    const girlsScore = gameState.teams.girls.score
+    const boysScore = gameState.teams.boys.score
+    const girlsWin = girlsScore > boysScore
+    const boysWin = boysScore > girlsScore
+    const isTie = girlsScore === boysScore
+
+    return (
+      <main className="min-h-screen tv-background flex flex-col items-center justify-center p-8">
+        <h1 className="text-6xl font-bold text-gold-400 mb-4">Game Over!</h1>
+        <p className="text-2xl text-gray-300 mb-12">
+          {isTie ? "It's a tie!" : 'And the winner is...'}
+        </p>
+
+        <div className="grid grid-cols-2 gap-24">
+          {/* Girls team */}
+          <div className="text-center">
+            {girlsWin && (
+              <div className="text-6xl mb-4 animate-bounce">👑</div>
+            )}
+            <div
+              className={`text-4xl font-bold mb-4 ${girlsWin ? 'scale-110' : ''}`}
+              style={{ color: gameState.teams.girls.color }}
+            >
+              {gameState.teams.girls.name}
+            </div>
+            <div
+              className={`font-bold text-white ${girlsWin ? 'text-8xl' : 'text-6xl'}`}
+            >
+              {girlsScore}
+            </div>
+            <div className="text-xl text-gray-400 mt-2">points</div>
+          </div>
+
+          {/* Boys team */}
+          <div className="text-center">
+            {boysWin && (
+              <div className="text-6xl mb-4 animate-bounce">👑</div>
+            )}
+            <div
+              className={`text-4xl font-bold mb-4 ${boysWin ? 'scale-110' : ''}`}
+              style={{ color: gameState.teams.boys.color }}
+            >
+              {gameState.teams.boys.name}
+            </div>
+            <div
+              className={`font-bold text-white ${boysWin ? 'text-8xl' : 'text-6xl'}`}
+            >
+              {boysScore}
+            </div>
+            <div className="text-xl text-gray-400 mt-2">points</div>
+          </div>
+        </div>
+
+        {isTie && (
+          <div className="text-6xl mt-8 animate-pulse">🤝</div>
+        )}
+
+        {/* Confetti for winner */}
+        <Confetti
+          teamColor={girlsWin ? gameState.teams.girls.color : boysWin ? gameState.teams.boys.color : '#FFD700'}
+          show={!isTie}
+        />
+      </main>
+    )
+  }
+
   // Lobby phase
   if (gameState.phase === 'lobby') {
     return (
       <main className="min-h-screen tv-background flex flex-col items-center justify-center p-8">
         <h1 className="text-7xl font-bold text-gold-400 mb-8">Golden Friends</h1>
-        <p className="text-3xl text-gray-300 mb-12">Family Feud - Friends Edition</p>
+        <p className="text-3xl text-gray-300 mb-12">Family Feud - Famille en Or - Friends Edition</p>
 
         <div className="grid grid-cols-2 gap-16">
           <div className="text-center">
@@ -167,13 +235,19 @@ function TVDisplay() {
           roundPoints={gameState.roundPoints}
         />
 
-        {/* Question - only show when questionVisible */}
+        {/* Multiplier - always visible */}
         <div className="flex-1 flex flex-col items-center justify-center">
+          {currentQuestion.pointMultiplier && currentQuestion.pointMultiplier > 1 && (
+            <div className="mb-4">
+              <span className="bg-gold-400 text-gray-900 px-4 py-2 rounded text-2xl font-bold">
+                x{currentQuestion.pointMultiplier} POINTS
+              </span>
+            </div>
+          )}
+
+          {/* Question and photo - only show when questionVisible */}
           {gameState.questionVisible ? (
             <>
-              <div className="text-lg text-gold-400 uppercase tracking-wider mb-2">
-                {currentQuestion.category}
-              </div>
               <h2 className="text-4xl font-bold text-center mb-8 max-w-3xl">
                 {currentQuestion.question}
               </h2>
@@ -191,7 +265,7 @@ function TVDisplay() {
             </>
           ) : (
             <div className="text-4xl text-gold-400 font-bold">
-              PHOTO QUESTION
+              {currentQuestion.mediaUrl ? 'PHOTO QUESTION' : 'GET READY...'}
             </div>
           )}
 
@@ -256,17 +330,18 @@ function TVDisplay() {
         roundPoints={gameState.roundPoints}
       />
 
+      {/* Point multiplier - shown before question */}
+      {currentQuestion?.pointMultiplier && currentQuestion.pointMultiplier > 1 && (
+        <div className="text-center py-2">
+          <span className="bg-gold-400 text-gray-900 px-4 py-2 rounded text-xl font-bold">
+            x{currentQuestion.pointMultiplier} POINTS
+          </span>
+        </div>
+      )}
+
       {/* Question - hidden during regular play, shown during faceoff (when visible) or reveal */}
       {((gameState.phase === 'faceoff' && gameState.questionVisible) || gameState.phase === 'reveal') && (
         <div className="text-center py-4 px-4">
-          <div className="text-sm text-gold-400 uppercase tracking-wider mb-1">
-            {currentQuestion?.category}
-            {currentQuestion?.pointMultiplier && currentQuestion.pointMultiplier > 1 && (
-              <span className="ml-2 bg-gold-400 text-gray-900 px-2 py-1 rounded text-xs font-bold">
-                x{currentQuestion.pointMultiplier}
-              </span>
-            )}
-          </div>
           <h2 className="text-xl md:text-2xl font-bold max-w-3xl mx-auto">
             {currentQuestion?.question}
           </h2>

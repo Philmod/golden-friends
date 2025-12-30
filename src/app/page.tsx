@@ -29,7 +29,7 @@ export default function Home() {
         Golden Friends
       </h1>
       <p className="text-xl text-gray-300 mb-12">
-        Family Feud - Friends Edition
+        Family Feud - Famille en Or - Friends Edition
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full">

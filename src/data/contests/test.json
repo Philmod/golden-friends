@@ -1,0 +1,35 @@
+{
+  "name": "Test Contest",
+  "description": "Test contest with one example of each question type",
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple",
+      "category": "Animals",
+      "question": "Name a pet that lives in a house",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Dog", "points": 50, "revealed": false },
+        { "id": 2, "text": "Cat", "points": 30, "revealed": false },
+        { "id": 3, "text": "Fish", "points": 20, "revealed": false }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "buzzer",
+      "category": "Colors",
+      "question": "What color is the sky on a clear day?",
+      "correctAnswer": "Blue",
+      "pointMultiplier": 3
+    },
+    {
+      "id": 3,
+      "type": "buzzer",
+      "category": "Photo",
+      "question": "What breed is this dog?",
+      "mediaUrl": "/data/test-dog.jpg",
+      "correctAnswer": "Golden Retriever",
+      "pointMultiplier": 6
+    }
+  ]
+}

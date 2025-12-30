@@ -13,7 +13,7 @@ export default function BuzzerIndicator({ buzzOrder, teams, showFirst = true }: 
     return (
       <div className="text-center py-4">
         <div className="text-2xl text-gray-400 animate-pulse">
-          En attente des buzzers...
+          Waiting for the buzzers...
         </div>
       </div>
     )

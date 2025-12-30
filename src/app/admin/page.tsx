@@ -73,7 +73,7 @@ function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: strin
     return {
       action: "Click 'Unlock' to open buzzers, then 'Correct' or 'Wrong' after the answer",
       say: "\"Look at the photo carefully... Buzz when you know!\"",
-      next: "After answer: Correct (+10 pts) or Wrong (-5 pts, next player)"
+      next: "After answer: Correct (+30 pts) or Wrong (-10 pts, next player)"
     }
   }
 
@@ -107,6 +107,12 @@ function getPhaseHelp(phase: string, isBuzzerQuestion: boolean): { action: strin
         action: "Show remaining answers. Points should already be awarded.",
         say: "\"Let's see the answers you missed...\"",
         next: "Click 'Next' to go to the next question."
+      }
+    case 'complete':
+      return {
+        action: "Game over! The winner is displayed on the TV.",
+        say: "\"And the winner is... [Team name]! Congratulations!\"",
+        next: "Click 'Lobby' to start a new game."
       }
     default:
       return {
@@ -271,6 +277,21 @@ function AdminPanel() {
                 <span className="text-sm text-gray-200">{phaseHelp.next}</span>
               </div>
             )}
+
+            {/* Game rules - only in lobby */}
+            {gameState.phase === 'lobby' && (
+              <div className="mt-4 pt-4 border-t border-indigo-500/30">
+                <div className="text-gold-400 font-bold text-sm mb-2">🏆 Game Rules to Explain:</div>
+                <ul className="text-sm text-gray-300 space-y-1 list-disc list-inside">
+                  <li><strong>Join a team</strong> - Scan the QR code on the TV</li>
+                  <li><strong>Two types of questions:</strong> Multiple Choice (guess top answers) & Buzzer (quick answer, sometimes with photos)</li>
+                  <li><strong>Face-Off</strong> - First to buzz with a correct answer wins control</li>
+                  <li><strong>Play</strong> - Team guesses answers. 3 strikes = other team can steal!</li>
+                  <li><strong>Points</strong> - Some questions have multipliers (x2, x3...)</li>
+                  <li><strong>Win</strong> - Most points at the end wins!</li>
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -407,42 +428,76 @@ function AdminPanel() {
                     gameState.phase === 'lobby' ? 'bg-gray-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
                   }`}
                 >
-                  1. Lobby
+                  Lobby
                 </button>
                 <span className="text-xs text-gray-400">Waiting for players</span>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setPhase('faceoff')}
-                  className={`py-2 px-4 rounded-lg w-28 text-left ${
-                    gameState.phase === 'faceoff' ? 'bg-yellow-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
-                  }`}
-                >
-                  2. Face-off
-                </button>
-                <span className="text-xs text-gray-400">Buzzers open</span>
+              <div className="border-t border-gray-600 my-2 pt-2">
+                <span className="text-xs text-gray-500">
+                  {isBuzzerQuestion ? 'Buzzer question:' : 'Per question:'}
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+              {isBuzzerQuestion ? (
+                /* Buzzer question: just Play (buzz) */
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setPhase('play')}
+                    className={`py-2 px-4 rounded-lg w-28 text-left ${
+                      gameState.phase === 'play' ? 'bg-green-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                    }`}
+                  >
+                    1. Buzz!
+                  </button>
+                  <span className="text-xs text-gray-400">Everyone can buzz</span>
+                </div>
+              ) : (
+                /* Multiple choice: Face-off → Play → Steal */
+                <>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setPhase('faceoff')}
+                      className={`py-2 px-4 rounded-lg w-28 text-left ${
+                        gameState.phase === 'faceoff' ? 'bg-yellow-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                      }`}
+                    >
+                      1. Face-off
+                    </button>
+                    <span className="text-xs text-gray-400">Buzzers open</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setPhase('play')}
+                      className={`py-2 px-4 rounded-lg w-28 text-left ${
+                        gameState.phase === 'play' ? 'bg-green-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                      }`}
+                    >
+                      2. Play
+                    </button>
+                    <span className="text-xs text-gray-400">Team guesses answers</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setPhase('steal')}
+                      className={`py-2 px-4 rounded-lg w-28 text-left ${
+                        gameState.phase === 'steal' ? 'bg-red-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                      }`}
+                    >
+                      3. Steal
+                    </button>
+                    <span className="text-xs text-gray-400">Other team can steal</span>
+                  </div>
+                </>
+              )}
+              <div className="flex items-center gap-3 mt-2 pt-2 border-t border-gray-600">
                 <button
-                  onClick={() => setPhase('play')}
+                  onClick={() => setPhase('complete')}
                   className={`py-2 px-4 rounded-lg w-28 text-left ${
-                    gameState.phase === 'play' ? 'bg-green-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
+                    gameState.phase === 'complete' ? 'bg-gold-500 ring-2 ring-white text-gray-900' : 'bg-gold-600 hover:bg-gold-500 text-gray-900'
                   }`}
                 >
-                  3. Play
+                  🏆 End
                 </button>
-                <span className="text-xs text-gray-400">Team guesses answers</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setPhase('steal')}
-                  className={`py-2 px-4 rounded-lg w-28 text-left ${
-                    gameState.phase === 'steal' ? 'bg-red-600 ring-2 ring-white' : 'bg-gray-700 hover:bg-gray-600'
-                  }`}
-                >
-                  4. Steal
-                </button>
-                <span className="text-xs text-gray-400">Other team can steal</span>
+                <span className="text-xs text-gray-400">Show final scores</span>
               </div>
             </div>
           </div>
@@ -608,13 +663,13 @@ function AdminPanel() {
                   onClick={() => markCorrect(true)}
                   className="bg-green-700 hover:bg-green-600 py-2 rounded-lg"
                 >
-                  Correct (+10)
+                  Correct (+30)
                 </button>
                 <button
                   onClick={() => markCorrect(false)}
                   className="bg-red-700 hover:bg-red-600 py-2 rounded-lg"
                 >
-                  Wrong (-5)
+                  Wrong (-10)
                 </button>
               </div>
             )}

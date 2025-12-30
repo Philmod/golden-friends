@@ -13,7 +13,7 @@ const DRINKING_RULES: DrinkingRule[] = [
   {
     id: 'strike',
     event: 'Strike (X)',
-    rule: 'Player rinks',
+    rule: 'Player drinks',
     icon: '❌',
   },
   {
