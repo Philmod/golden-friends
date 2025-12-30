@@ -74,6 +74,7 @@ function BuzzerButton() {
 
   const canBuzz = gameState && !gameState.isLocked && myBuzzerPosition === null
   const hasBuzzed = myBuzzerPosition !== null
+  const currentQuestion = gameState?.questions[gameState.currentQuestionIndex]
 
   const teamColor = myTeam === 'girls' ? '#FF69B4' : '#4169E1'
   const teamName = myTeam === 'girls' ? 'Girls' : 'Boys'
@@ -126,7 +127,6 @@ function BuzzerButton() {
             {gameState.phase === 'faceoff' && 'Face-off! Buzz first!'}
             {gameState.phase === 'play' && `${gameState.teams[gameState.controllingTeam || 'girls'].name} plays`}
             {gameState.phase === 'steal' && `${gameState.teams[gameState.activeTeam || 'girls'].name} can steal!`}
-            {gameState.phase === 'photo' && 'Photo question!'}
           </div>
 
           {/* Scores */}
@@ -140,6 +140,30 @@ function BuzzerButton() {
               <span className="ml-2 font-bold">{gameState.teams.boys.score}</span>
             </div>
           </div>
+
+          {/* Question display */}
+          {gameState.questionVisible && currentQuestion && (
+            <div className="mt-4 px-4 py-3 mx-4 bg-gray-800/50 rounded-xl">
+              {currentQuestion.category && (
+                <div className="text-xs text-gold-400 uppercase tracking-wider mb-1">
+                  {currentQuestion.category}
+                </div>
+              )}
+              <div className="text-sm font-medium text-white">
+                {currentQuestion.question}
+              </div>
+              {/* Photo for buzzer questions */}
+              {currentQuestion.type === 'buzzer' && currentQuestion.mediaUrl && (
+                <div className="mt-3 flex justify-center">
+                  <img
+                    src={currentQuestion.mediaUrl}
+                    alt="Question"
+                    className="max-h-32 rounded-lg border-2 border-gold-400"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

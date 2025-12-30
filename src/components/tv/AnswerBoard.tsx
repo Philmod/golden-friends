@@ -37,7 +37,7 @@ export default function AnswerBoard({ answers, stolenAnswerIndex }: AnswerBoardP
           <div className="my-4 border-t-2 border-blue-400/30" />
           <AnswerCard
             answer={stolenAnswer}
-            index={stolenAnswerIndex}
+            index={stolenAnswerIndex!}
             isStolen={true}
           />
         </>
