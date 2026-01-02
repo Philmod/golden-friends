@@ -1,0 +1,91 @@
+{
+  "name": "Example Contest",
+  "description": "Sample Family Feud questions - customize with your own!",
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple",
+      "category": "Food",
+      "question": "Name something you put on a hamburger",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Ketchup", "points": 35, "revealed": false },
+        { "id": 2, "text": "Cheese", "points": 25, "revealed": false },
+        { "id": 3, "text": "Lettuce", "points": 20, "revealed": false },
+        { "id": 4, "text": "Pickles", "points": 12, "revealed": false },
+        { "id": 5, "text": "Onions", "points": 8, "revealed": false }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "multiple",
+      "category": "Travel",
+      "question": "Name something people forget when going on vacation",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Toothbrush", "points": 35, "revealed": false },
+        { "id": 2, "text": "Phone charger", "points": 25, "revealed": false },
+        { "id": 3, "text": "Passport", "points": 20, "revealed": false },
+        { "id": 4, "text": "Sunscreen", "points": 15, "revealed": false },
+        { "id": 5, "text": "Medications", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "buzzer",
+      "category": "Geography",
+      "question": "What is the capital of France?",
+      "correctAnswer": "Paris",
+      "pointMultiplier": 1
+    },
+    {
+      "id": 4,
+      "type": "multiple",
+      "category": "Movies",
+      "question": "Name a popular movie snack",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Popcorn", "points": 50, "revealed": false },
+        { "id": 2, "text": "Candy", "points": 25, "revealed": false },
+        { "id": 3, "text": "Nachos", "points": 15, "revealed": false },
+        { "id": 4, "text": "Soda", "points": 10, "revealed": false }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "multiple",
+      "category": "Superpowers",
+      "question": "Name a superpower most people would want",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Flight", "points": 40, "revealed": false },
+        { "id": 2, "text": "Invisibility", "points": 30, "revealed": false },
+        { "id": 3, "text": "Teleportation", "points": 15, "revealed": false },
+        { "id": 4, "text": "Super strength", "points": 10, "revealed": false },
+        { "id": 5, "text": "Mind reading", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "buzzer",
+      "category": "Science",
+      "question": "What planet is known as the Red Planet?",
+      "correctAnswer": "Mars",
+      "pointMultiplier": 2
+    },
+    {
+      "id": 7,
+      "type": "multiple",
+      "category": "Technology",
+      "question": "Name something people do on their phone while waiting",
+      "pointMultiplier": 3,
+      "answers": [
+        { "id": 1, "text": "Social media", "points": 40, "revealed": false },
+        { "id": 2, "text": "Games", "points": 25, "revealed": false },
+        { "id": 3, "text": "Text/Message", "points": 20, "revealed": false },
+        { "id": 4, "text": "Watch videos", "points": 10, "revealed": false },
+        { "id": 5, "text": "Read news", "points": 5, "revealed": false }
+      ]
+    }
+  ]
+}
