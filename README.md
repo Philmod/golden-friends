@@ -2,6 +2,8 @@
 
 A Family Feud-style party game built with Next.js and Socket.io. Features a TV display, admin panel, and mobile buzzers for players.
 
+I created this game for the New Year Eve 2025 party, see the questions in src/data/contests.
+
 ## Endpoints
 
 - `/` - Home page
