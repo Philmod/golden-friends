@@ -25,6 +25,14 @@ npm run dev
 npm run dev:server
 ```
 
+## Testing
+
+```bash
+npm test              # Run tests once
+npm run test:watch    # Run tests in watch mode
+npm run test:coverage # Run tests with coverage report
+```
+
 ## Production
 
 ```bash

@@ -1,0 +1,154 @@
+{
+  "name": "Golden Friends - Default",
+  "description": "New Year's Eve questions for friends",
+  "questions": [
+    {
+      "id": 2,
+      "type": "multiple",
+      "category": "Excuses",
+      "question": "Name a lame excuse to justify being 30 minutes late",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Couldn't find parking", "points": 35, "revealed": false },
+        { "id": 2, "text": "My GPS glitched", "points": 20, "revealed": false },
+        { "id": 3, "text": "Had to iron my shirt", "points": 15, "revealed": false },
+        { "id": 4, "text": "The cat threw up", "points": 10, "revealed": false },
+        { "id": 5, "text": "I was sure it was 9pm", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 1,
+      "type": "multiple",
+      "category": "The Group",
+      "question": "Who sends the most messages in the Canal Cabiai?",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Pauline", "points": 37, "revealed": false },
+        { "id": 2, "text": "Heloise", "points": 19, "revealed": false },
+        { "id": 3, "text": "Yannick", "points": 16, "revealed": false },
+        { "id": 4, "text": "Annick", "points": 15, "revealed": false },
+        { "id": 5, "text": "Gauthier", "points": 14, "revealed": false }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "buzzer",
+      "category": "Photo",
+      "question": "What year was this photo taken?",
+      "mediaUrl": "/data/IMG_0562.JPG",
+      "correctAnswer": "2015"
+    },
+    {
+      "id": 5,
+      "type": "multiple",
+      "category": "Vacation",
+      "question": "What do you always forget when going on vacation?",
+      "pointMultiplier": 1,
+      "answers": [
+        { "id": 1, "text": "Toothbrush", "points": 35, "revealed": false },
+        { "id": 2, "text": "Phone charger", "points": 25, "revealed": false },
+        { "id": 3, "text": "Swimsuit", "points": 20, "revealed": false },
+        { "id": 4, "text": "Sunscreen", "points": 15, "revealed": false },
+        { "id": 5, "text": "Sense of direction", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "buzzer",
+      "category": "WhoSaid",
+      "question": "Who said: 'Le talent n'existe pas. Le don ou l'intelligence ne créent pas d'impact sans effort et discipline' ? ",
+      "correctAnswer": "Stéphanie G"
+    },
+    {
+      "id": 7,
+      "type": "multiple",
+      "category": "Artificial Intelligence",
+      "question": "Besides books and articles, name something 'weird' LLMs were trained on to learn how humans talk.",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Reddit threads/comments", "points": 45, "revealed": false },
+        { "id": 2, "text": "Movie subtitles", "points": 25, "revealed": false },
+        { "id": 3, "text": "Wikipedia talk pages", "points": 15, "revealed": false },
+        { "id": 4, "text": "Recipes", "points": 10, "revealed": false },
+        { "id": 5, "text": "Video game manuals", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "buzzer",
+      "category": "Photo",
+      "pointMultiplier": 2,
+      "question": "What year was this photo taken?",
+      "mediaUrl": "/data/2005-02-02_18.jpg",
+      "correctAnswer": "2006"
+    },
+    {
+      "id": 9,
+      "type": "multiple",
+      "category": "The Group",
+      "question": "How do people in this group exit a party?",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "I have to work early tomorrow", "points": 35, "revealed": false },
+        { "id": 2, "text": "Irish exit (disappear without saying goodbye)", "points": 25, "revealed": false },
+        { "id": 3, "text": "Change shoes", "points": 20, "revealed": false },
+        { "id": 4, "text": "My cat/dog is waiting", "points": 12, "revealed": false },
+        { "id": 5, "text": "My Uber is here", "points": 8, "revealed": false }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "buzzer",
+      "category": "WhoSaid",
+      "question": "Who said: 'Tu ne peux pas être dans le rebond tant que tu n'as pas touché le fond.' ? ",
+      "correctAnswer": "Gauthier (2024)",
+      "pointMultiplier": 2
+    },
+    {
+      "id": 11,
+      "type": "buzzer",
+      "category": "Photo",
+      "pointMultiplier": 2,
+      "question": "What year was this photo taken?",
+      "mediaUrl": "/data/DSCN3038.JPG",
+      "correctAnswer": "2011"
+    },
+    {
+      "id": 12,
+      "type": "multiple",
+      "category": "Superpowers",
+      "question": "Name a super-power most people would want.",
+      "pointMultiplier": 2,
+      "answers": [
+        { "id": 1, "text": "Flight", "points": 40, "revealed": false },
+        { "id": 2, "text": "Invisibility", "points": 30, "revealed": false },
+        { "id": 3, "text": "Teleportation", "points": 15, "revealed": false },
+        { "id": 4, "text": "Time Travel", "points": 10, "revealed": false },
+        { "id": 5, "text": "Mind Reading", "points": 5, "revealed": false }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "buzzer",
+      "category": "Photo",
+      "pointMultiplier": 2,
+      "question": "What year was this photo taken?",
+      "mediaUrl": "/data/IMG_0926.JPG",
+      "correctAnswer": "2015"
+    },
+    {
+      "id": 14,
+      "type": "multiple",
+      "category": "Nightmares",
+      "question": "What might snowmen have nightmares about?",
+      "pointMultiplier": 3,
+      "answers": [
+        { "id": 1, "text": "Sun/Hot Weather", "points": 62, "revealed": false },
+        { "id": 2, "text": "Fire/Flame Throwers", "points": 14, "revealed": false },
+        { "id": 3, "text": "Hair Dryers", "points": 12, "revealed": false },
+        { "id": 4, "text": "Peeing Dogs", "points": 7, "revealed": false },
+        { "id": 5, "text": "Salt Trucks", "points": 5, "revealed": false }
+      ]
+    }
+  ]
+}
