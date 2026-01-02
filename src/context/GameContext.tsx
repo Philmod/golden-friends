@@ -8,7 +8,6 @@ import type {
   TeamId,
   GamePhase,
   SoundType,
-  ClientToServerEvents,
 } from '@/types/game'
 
 interface GameContextValue {

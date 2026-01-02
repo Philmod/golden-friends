@@ -8,7 +8,7 @@ interface AnswerCardProps {
   isStolen?: boolean
 }
 
-export default function AnswerCard({ answer, index, isStolen }: AnswerCardProps) {
+export default function AnswerCard({ answer, isStolen }: AnswerCardProps) {
   return (
     <div className={`relative h-12 md:h-14 ${isStolen ? 'mt-2' : ''}`}>
       {/* Answer bar container */}

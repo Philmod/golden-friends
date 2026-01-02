@@ -98,9 +98,9 @@ const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
 
 // Game state
-let currentContestId = 'default'
+let currentContestId = 'example'
 let gameState: GameState = createInitialGameState(loadQuestionsFromFile(currentContestId))
-let players: Map<string, Player> = new Map()
+const players: Map<string, Player> = new Map()
 
 // Try to restore saved game state on startup
 if (loadSavedGameState()) {

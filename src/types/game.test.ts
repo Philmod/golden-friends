@@ -22,6 +22,7 @@ describe('createInitialGameState', () => {
       type: 'buzzer',
       question: 'Who said this?',
       correctAnswer: 'Someone',
+      answers: [],
     },
   ]
 

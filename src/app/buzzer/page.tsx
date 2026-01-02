@@ -233,7 +233,7 @@ function BuzzerPage() {
         const { name, team } = JSON.parse(saved)
         joinGame(name, team)
         setHasJoined(true)
-      } catch (e) {
+      } catch {
         localStorage.removeItem('goldenFriends_player')
       }
     }
